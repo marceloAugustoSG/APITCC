@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// generator erd {
+//   provider = "prisma-erd-generator"
+// }
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  senha String
+
+  @@map("usuarios")
+}
+
+model Paciente {
+  id        Int        @id @default(autoincrement())
+  nome      String
+  email     String     @unique
+  password  String
+  tipo      String
+  telefone  String?
+  consultas Consulta[]
+
+  @@map("pacientes")
+}
+
+model Consulta {
+  id             Int           @id @default(autoincrement())
+  data           DateTime
+  status         String
+  observacao     String
+  servico        String
+  pacienteId     Int?
+  Paciente       Paciente?     @relation(fields: [pacienteId], references: [id])
+  profissionalId Int?
+  Profissional   Profissional? @relation(fields: [profissionalId], references: [id])
+
+  @@map("consultas")
+}
+
+model Profissional {
+  id            Int        @id @default(autoincrement())
+  nome          String
+  especialidade String
+  consultas     Consulta[]
+
+  @@map("profissionais")
+}
