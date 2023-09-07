@@ -1,5 +1,3 @@
-import { isValid, utcToZonedTime, format, DateTimeFormat, intlFormat } from "date-fns";
-import { ptBR } from "date-fns/locale/pt-BR";
 
 import {
   createConsulta,
