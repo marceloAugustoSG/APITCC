@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "start":"yarn start "
+    "start": "yarn start "
   },
   "keywords": [],
   "author": "",
