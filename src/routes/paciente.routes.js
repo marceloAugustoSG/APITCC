@@ -1,4 +1,4 @@
-import { create, get, getId, update, excluir } from '../controllers/pacientes.controller';
+import { create, get, getId, update, excluir } from '../controllers/pacientes.controller.js';
 const pacienteRoutes = app => {
     app.post("/paciente", create)
     app.get("/pacientes", get)

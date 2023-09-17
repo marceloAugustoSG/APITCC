@@ -1,4 +1,4 @@
-import { getAllConsultasPaciente, createConsultaPaciente, deletarConsultaPaciente, updateConsultaPaciente } from "../models/pacienteConsulta.model";
+import { getAllConsultasPaciente, createConsultaPaciente, deletarConsultaPaciente, updateConsultaPaciente } from "../models/pacienteConsulta.model.js";
 
 export const getPacienteConsultas = async (req, res) => {
     try {

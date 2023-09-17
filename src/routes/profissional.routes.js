@@ -4,7 +4,7 @@ import {
   getId,
   update,
   excluir,
-} from "../controllers/profissional.controller";
+} from "../controllers/profissional.controller.js";
 
 const profissionalRoutes = (app) => {
   app.post("/profissional", create);

@@ -1,5 +1,4 @@
-import { prisma } from '../services/prisma'
-import { getById } from './paciente.model'
+import { prisma } from '../services/prisma.js'
 
 export const createConsultaPaciente = async (id, data) => {
 

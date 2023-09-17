@@ -1,4 +1,3 @@
-yarn 
 
 yarn prisma generate
 

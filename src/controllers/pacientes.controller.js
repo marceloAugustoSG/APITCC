@@ -5,8 +5,8 @@ import {
   getById,
   updatePaciente,
   deletarPaciente,
-} from "../models/paciente.model";
-import { pacienteValidation } from "../validations/paciente.validation";
+} from "../models/paciente.model.js";
+import { pacienteValidation } from "../validations/paciente.validation.js";
 
 export const create = async (req, res) => {
   try {

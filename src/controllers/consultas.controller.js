@@ -6,8 +6,7 @@ import {
   updateConsulta,
   deletarConsulta,
   deleteAllConsultas,
-} from "../models/consulta.model";
-import ptBR from "date-fns/locale/pt-BR";
+} from "../models/consulta.model.js";
 
 const opcoesLocais = { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
 

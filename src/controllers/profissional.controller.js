@@ -4,9 +4,8 @@ import {
   getAll,
   getById,
   updateProfissional,
-  deletarProfissional
   
-} from "../models/profissional.model";
+} from "../models/profissional.model.js";
 
 export const create = async (req, res) => {
   try {

@@ -1,4 +1,4 @@
-import { getPacienteConsultas, createNewConsulta, atualizarConsultaPaciente, excluirConsultaPaciente } from "../controllers/pacienteConsulta.controller"
+import { getPacienteConsultas, createNewConsulta, atualizarConsultaPaciente, excluirConsultaPaciente } from "../controllers/pacienteConsulta.controller.js"
 
 
 const consultasPacienteRoutes = app => {

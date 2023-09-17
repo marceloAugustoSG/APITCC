@@ -1,9 +1,27 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import { Jwt } from "jsonwebtoken";
 import { prisma } from "../services/prisma";
-
+import jwt, { sign } from "jsonwebtoken";
 const router = express();
+
+const chaveSecreta = 'sasasAgenda'
+
+
+function gerarToken(user) {
+  return jwt.sign({ id: user.id, role: user.role }, chaveSecreta, { expiresIn: '1h' });
+}
+
+
+function autenticacaoToken(req, res, next) {
+  const token = req.header('Authorization');
+  if (!token) return res.status(401).json({ message: 'Token não fornecido' });
+
+  jwt.verify(token, secretKey, (err, user) => {
+    if (err) return res.status(403).json({ message: 'Token inválido' });
+    req.user = user;
+    next();
+  });
+}
 
 router.post("/registrar", async (req, res) => {
   try {

@@ -1,4 +1,4 @@
-import { create, get, getId, update, excluir, excluirTodasAsConsultas } from "../controllers/consultas.controller";
+import { create, get, getId, update, excluir, excluirTodasAsConsultas } from "../controllers/consultas.controller.js";
 
 const consultaRoutes = app => {
     app.post("/consulta", create)
