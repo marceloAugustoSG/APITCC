@@ -10,6 +10,7 @@ export const createPaciente = async (data) => {
             email: true,
             password: false,
             tipo: true,
+            matricula: true,
             consultas: true
 
         }
@@ -26,6 +27,7 @@ export const getAll = async () => {
             email: true,
             password: false,
             tipo: true,
+            matricula: true,
             consultas: true
 
         }
@@ -45,6 +47,7 @@ export const getById = async (id) => {
             email: true,
             password: false,
             tipo: true,
+            matricula: true,
             consultas: true
         }
 
@@ -64,7 +67,8 @@ export const updatePaciente = async (id, data) => {
             nome: true,
             email: true,
             password: false,
-            tipo: true
+            tipo: true,
+            matricula: true
         }
     })
     return paciente
