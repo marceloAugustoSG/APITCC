@@ -2,17 +2,16 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Usuario {
-  id    Int    @id @default(autoincrement())
-  email String @unique
-  senha String
+  id       Int       @id @default(autoincrement())
+  email    String    @unique
+  password String
+  Paciente Paciente?
 
   @@map("usuarios")
 }
@@ -20,12 +19,12 @@ model Usuario {
 model Paciente {
   id        Int        @id @default(autoincrement())
   nome      String
-  email     String     @unique
-  password  String
   tipo      String
   matricula String
   telefone  String?
   consultas Consulta[]
+  usuario   Usuario    @relation(fields: [usuarioId], references: [id])
+  usuarioId Int        @unique
 
   @@map("pacientes")
 }

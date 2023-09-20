@@ -1,39 +1,57 @@
 import { prisma } from '../services/prisma.js'
 
-export const createPaciente = async (data) => {
 
+
+// Função para criar um novo paciente
+export const createPaciente = async (data) => {
     const paciente = await prisma.paciente.create({
-        data,
+        data: {
+            nome: data.nome,
+            tipo: data.tipo,
+            matricula: data.matricula,
+            telefone: data.telefone,
+
+            usuario: {
+                connect: { id: data.usuarioId },
+            },
+        },
         select: {
             id: true,
             nome: true,
-            email: true,
-            password: false,
             tipo: true,
             matricula: true,
-            consultas: true
+            telefone: true,
+            usuario: {
+                select: {
+                    id: true,
+                    email: true,
+                    password: true,
+                },
+            },
+            usuarioId: true
+        },
+    });
 
-        }
-    })
-    return paciente
-}
+    return paciente;
+};
 
 
 export const getAll = async () => {
     const pacientes = await prisma.paciente.findMany({
         select: {
+            usuario: {
+                select: {
+                    id: true,
+                    email: true,
+                    password: false
+                }
+            },
             id: true,
             nome: true,
-            email: true,
-            password: false,
             tipo: true,
             matricula: true,
-            consultas: true
-
         }
     })
-
-
     return pacientes
 }
 

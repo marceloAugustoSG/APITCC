@@ -1,11 +1,16 @@
-import { createUser, getAll } from "../models/user.model.js";
+import { createPaciente } from "../models/paciente.model.js";
+import { createUsuario, getAll } from "../models/user.model.js";
 
 export const create = async (req, res) => {
   try {
-    const usuario = await createUser(req.body);
+
+
+    const usuario = await createUsuario(req.body)
+    console.log(req.body)
+
     res.status(200).send(usuario);
   } catch (e) {
-    res.json({ Erro: "Erro ao criar um usuario" });
+    res.status(400).json({ Erro: "Erro ao criar um usuario: " + e });
   }
 };
 

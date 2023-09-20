@@ -6,17 +6,20 @@ import {
   updatePaciente,
   deletarPaciente,
 } from "../models/paciente.model.js";
-import { pacienteValidation } from "../validations/paciente.validation.js";
-
+import { userValidation } from "../validations/paciente.validation.js";
+import { createUser } from "../models/user.model.js";
 export const create = async (req, res) => {
   try {
-    await pacienteValidation.validate(req.body);
-    const hashPassword = await bcrypt.hash(req.body.password, 10);
-    req.body.password = hashPassword;
-    const paciente = await createPaciente(req.body);
+
+    const dataPaciente = req.body.dataPaciente
+    console.log(dataPaciente)
+
+    const paciente = await createPaciente(dataPaciente)
+
+
     res.status(200).send(paciente);
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).send(`teste:${e}`);
   }
 };
 
@@ -24,12 +27,10 @@ export const get = async (req, res) => {
   try {
     const pacientes = await getAll();
     if (pacientes.length === 0) {
-      res
-        .status(200)
-        .json({ message: "Nenhuma paciente cadastrado no sistema" });
+      res.status(200).json({ message: "Nenhuma paciente cadastrado no sistema" });
     } else res.status(200).send(pacientes);
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).send(`teste: ${e}`);
   }
 };
 export const getId = async (req, res) => {
@@ -38,6 +39,7 @@ export const getId = async (req, res) => {
     if (!paciente) {
       res.status(400).json({ message: "Paciente não encontrado" }).send();
     } else {
+
       res.status(200).json(paciente);
     }
   } catch (e) {

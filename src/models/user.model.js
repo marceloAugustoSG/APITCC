@@ -1,25 +1,51 @@
 import { prisma } from "../services/prisma.js";
 
-export const createUser = async (data) => {
+
+export const createUsuario = async (data) => {
   const usuario = await prisma.usuario.create({
-    data,
+    data: {
+      email: data.email,
+      password: data.password,
+      Paciente: {
+        create: {
+          nome: data.Paciente.nome,
+          tipo: data.Paciente.tipo,
+          matricula: data.Paciente.matricula,
+        },
+      },
+    },
     select: {
       id: true,
       email: true,
-      senha: true,
+      password: true,
+      Paciente: {
+        select: {
+          id: true,
+          consultas: true
+        }
+      }
     },
   });
+
   return usuario;
 };
+
+
 
 export const getAll = async () => {
   const usuarios = await prisma.usuario.findMany({
     select: {
       id: true,
       email: true,
-      senha: true,
-    },
-  });
+      password: true,
+      Paciente: {
+        select: {
+          id: true,
+          consultas: true
+        }
+      }
+    }
+  })
 
   return usuarios;
 };
@@ -32,7 +58,7 @@ export const getById = async (id) => {
     select: {
       id: true,
       email: true,
-      senha: true,
+      password: true,
     },
   });
   return usuario;
@@ -47,7 +73,7 @@ export const updateUsuario = async (id, data) => {
     select: {
       id: true,
       email: true,
-      senha: true,
+      password: true,
     },
   });
   return usuario;
