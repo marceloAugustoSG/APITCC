@@ -4,7 +4,7 @@ import {
   getId,
   update,
   excluir,
-} from "../controllers/usuarioController.js";
+} from "../controllers/usuario.controller.js";
 const usuariosRoutes = (app) => {
   app.post("/usuario", create);
   app.get("/usuarios", get);

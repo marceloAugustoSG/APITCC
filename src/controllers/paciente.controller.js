@@ -7,7 +7,7 @@ import {
   deletarPaciente,
 } from "../models/paciente.model.js";
 import { userValidation } from "../validations/paciente.validation.js";
-import { createUser } from "../models/user.model.js";
+import { createUser } from "../models/usuario.model.js";
 export const create = async (req, res) => {
   try {
 
