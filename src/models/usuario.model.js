@@ -1,4 +1,5 @@
 import { prisma } from "../services/prisma.js";
+import { deletarPaciente } from "./paciente.model.js";
 
 
 export const createUsuario = async (data) => {
@@ -58,7 +59,16 @@ export const getById = async (id) => {
     select: {
       id: true,
       email: true,
-      password: true,
+      password: false,
+      Paciente: {
+        select: {
+          id: true,
+          nome: true,
+          tipo: true,
+          matricula: true,
+          usuarioId: true
+        }
+      }
     },
   });
   return usuario;
@@ -79,11 +89,40 @@ export const updateUsuario = async (id, data) => {
   return usuario;
 };
 
-export const deletarUsuario = async (id) => {
-  await prisma.usuario.delete({
+export const deletarUsuario = async (idUsuario) => {
+
+  //Encontrando o usuario
+  const usuario = await prisma.usuario.findUnique({
     where: {
-      id,
-    },
-  });
+      id: idUsuario
+    }, select: {
+      Paciente: true
+    }
+  })
+
+  // se o usuario nao conter o paciente, ele é excluido
+  if (usuario.Paciente === null) {
+    await prisma.usuario.delete({
+      where: {
+        id: idUsuario
+      }
+    })
+
+    // senão , o paciente deve ser excluido primeiro por conta da chave estrangeira
+
+  } else {
+    await prisma.paciente.delete({
+      where: {
+        usuarioId: idUsuario
+      }
+    })
+
+    //assim sendo , aqui o usuário é excluido
+    await prisma.usuario.delete({
+      where: {
+        id: idUsuario
+      }
+    })
+  }
   return;
 };

@@ -43,7 +43,7 @@ export const getAll = async () => {
                 select: {
                     id: true,
                     email: true,
-                    password: false
+                    password: true
                 }
             },
             id: true,
@@ -95,10 +95,10 @@ export const updatePaciente = async (id, data) => {
 
 
 export const deletarPaciente = async (id) => {
-    await prisma.paciente.delete({
+    const usuario = await prisma.paciente.delete({
         where: {
             id
         }
     })
-    return
+    return usuario;
 }
