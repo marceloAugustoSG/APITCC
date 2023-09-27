@@ -1,5 +1,4 @@
-import { number } from "yup";
-import { createUsuario, getAll, deletarUsuario, getById } from "../models/usuario.model.js";
+import { createUsuario, getAll, deletarUsuario, getById, updateUsuario } from "../models/usuario.model.js";
 import { prisma } from "../services/prisma.js";
 import bcrypt from 'bcrypt'
 import jwt from "jsonwebtoken";
@@ -39,7 +38,7 @@ export const create = async (req, res) => {
       const usuario = await createUsuario(usuarioCriado)
       console.log(req.body)
 
-      res.status(200).send(usuario);
+      res.status(200).json({ message: "usuario criado com sucesso!", usuario });
     } catch (e) {
       res.status(400).json({ Erro: "Erro ao criar um usuario: " + e });
     }
@@ -75,14 +74,14 @@ export const getId = async (req, res) => {
 
 export const update = async (req, res) => {
   try {
-    const usuario = await updatePaciente(Number(req.params.id), req.body);
+    const usuario = await updateUsuario(Number(req.params.id), req.body);
     if (!usuario) {
       res.status(400).json({ message: "Usuario não encontrado" }).send();
     } else {
       res.status(200).send(usuario);
     }
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).send(`${e}`);
   }
 };
 
@@ -126,46 +125,49 @@ export function checkToken(req, res, next) {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
 export const logar = async (req, res) => {
-  const { email, password } = req.body
-  //verificando campos
-  if (!email) {
-    res.status(404).json({ message: "o email é obrigatório" }).send();
-  }
-  if (!password) {
-    res.status(404).json({ message: "A senha é obrigatória" }).send();
-  }
-  //Verificando usuario
-  const usuario = await prisma.usuario.findUnique({
-    where: {
-      email
-    }
-  })
-  if (!usuario) {
-    res.status(404).json({ message: "usuário não encontrado" }).send();
-  }
-  const checkPassword = await bcrypt.compare(password, usuario.password)
-  if (!checkPassword) {
-    res.status(404).json({ message: "Senha inválida" }).send();
-  }
   try {
+    const { email, password } = req.body
+    const usuario = await prisma.usuario.findUnique({
+      where: {
+        email
+      }, select: {
+        id: true,
+        email: true,
+        password: true,
+        Paciente: {
+          select: {
+            id: true,
+            nome: true,
+            tipo: true,
+            matricula: true,
+            consultas: true
+          }
+        }
+      }
+    })
+    if (!email) {
+      res.status(404).json({ message: "email vazio" })
+    }
+
+    if (!password) {
+      res.status(404).json({ message: "Senha vazia" })
+    }
+
+    if (!usuario) {
+      res.status(404).json({ message: "usuario não encontrado" })
+    }
+
+    const checkPassword = await bcrypt.compare(password, usuario.password)
+    if (!checkPassword) {
+      res.status(404).json({ message: "Senha inválida" })
+    }
     const secret = process.env.SECRET
     const token = jwt.sign({
       id: usuario.id
     }, secret)
-    res.status(200).json({ message: "Autenticação realizada com sucesso!! ", token }).send();
-  } catch (e) {
-    res.status(500).json({ message: "Aconteceu um erro no servidor,tente novamente mais tarde" })
+    res.status(200).json({ message: "Autenticado com sucesso", token, usuario })
+  } catch (error) {
+    return
   }
 }

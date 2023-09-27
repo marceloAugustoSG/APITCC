@@ -1,4 +1,3 @@
-
 import {
   createConsulta,
   getAll,
@@ -17,8 +16,8 @@ export const create = async (req, res) => {
 
     res.status(200).send(consulta);
   } catch (e) {
-    res.status(400).send(e);
-    res.json({ Erro: "Erro ao criar uma consulta" });
+    console.log(`${e}`)
+    res.status(400).json({ message: "erro ao criar uma consulta", e });
   }
 };
 

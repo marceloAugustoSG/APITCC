@@ -26,6 +26,9 @@ export const getAllConsultasPaciente = async (id) => {
         }, select: {
             id: true,
             nome: true,
+            matricula: true,
+            tipo: true,
+            usuario: true,
             consultas: true
         }
     })

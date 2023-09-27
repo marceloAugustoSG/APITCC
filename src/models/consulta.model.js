@@ -25,6 +25,7 @@ export const getAll = async () => {
       data: true,
       status: true,
       observacao: true,
+      servico: true,
       pacienteId: true,
       profissionalId: true,
     },

@@ -1,5 +1,4 @@
 import { prisma } from "../services/prisma.js";
-import { deletarPaciente } from "./paciente.model.js";
 
 
 export const createUsuario = async (data) => {
@@ -22,6 +21,9 @@ export const createUsuario = async (data) => {
       Paciente: {
         select: {
           id: true,
+          nome: true,
+          tipo: true,
+          matricula: true,
           consultas: true
         }
       }
@@ -42,6 +44,9 @@ export const getAll = async () => {
       Paciente: {
         select: {
           id: true,
+          nome: true,
+          tipo: true,
+          matricula: true,
           consultas: true
         }
       }
@@ -66,7 +71,8 @@ export const getById = async (id) => {
           nome: true,
           tipo: true,
           matricula: true,
-          usuarioId: true
+          usuarioId: false,
+          consultas: true
         }
       }
     },
@@ -79,11 +85,14 @@ export const updateUsuario = async (id, data) => {
     where: {
       id,
     },
-    data,
+    data: {
+      data
+    },
     select: {
       id: true,
       email: true,
       password: true,
+      Paciente: true
     },
   });
   return usuario;
