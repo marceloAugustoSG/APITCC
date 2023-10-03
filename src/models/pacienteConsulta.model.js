@@ -9,8 +9,7 @@ export const createConsultaPaciente = async (id, data) => {
             data: true,
             status: true,
             observacao: true,
-            pacienteId: true
-
+            pacienteId: true,
         }
     })
 
@@ -28,9 +27,17 @@ export const getAllConsultasPaciente = async (id) => {
             nome: true,
             matricula: true,
             tipo: true,
-            usuario: true,
-            consultas: true
-        }
+            consultas: {
+                select: {
+                    data: true,
+                    status: true,
+                    servico: true, observacao: true,
+                    Paciente: true,
+                    Profissional: true, id: true
+                }
+            },
+
+        },
     })
 
 

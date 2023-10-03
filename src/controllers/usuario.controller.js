@@ -7,40 +7,42 @@ export const create = async (req, res) => {
 
   const { email, password } = req.body
 
-  const user = await prisma.usuario.findUnique({
-    where: {
-      email
-    }
-  })
+  if (!email.endsWith('@edu.ufes.br')) {
+    res.status(404).json({ message: "email nao aceito" })
 
-  if (!email) {
-    res.status(404).json({ message: "Email inválida" })
-  }
-  if (!password) {
-    res.status(404).json({ message: "Senha inválida" })
-  } if (user) {
-    res.status(404).json({ message: "usuário ja existe" })
-  }
-  else {
-
-    const hashPassword = await bcrypt.hash(password, 10)
-    try {
-      const usuarioCriado = {
-        email,
-        password: hashPassword,
-        Paciente: {
-          nome: req.body.Paciente.nome,
-          tipo: req.body.Paciente.tipo,
-          matricula: req.body.Paciente.matricula
-        }
+  } else {
+    const user = await prisma.usuario.findUnique({
+      where: {
+        email
       }
+    })
 
-      const usuario = await createUsuario(usuarioCriado)
-      console.log(req.body)
+    if (!email) {
+      res.status(404).json({ message: "Email inválido" })
+    }
 
-      res.status(200).json({ message: "usuario criado com sucesso!", usuario });
-    } catch (e) {
-      res.status(400).json({ Erro: "Erro ao criar um usuario: " + e });
+    if (!password) {
+      res.status(404).json({ message: "Senha inválida" })
+    } if (user) {
+      res.status(404).json({ message: "usuário ja existe" })
+    }
+    else {
+      const hashPassword = await bcrypt.hash(password, 10)
+      try {
+        const usuarioCriado = {
+          email,
+          password: hashPassword,
+          Paciente: {
+            nome: req.body.Paciente.nome,
+            tipo: req.body.Paciente.tipo,
+            matricula: req.body.Paciente.matricula
+          }
+        }
+        await createUsuario(usuarioCriado)
+        res.status(200).json({ message: `usuario criado com sucesso!` });
+      } catch (e) {
+        res.status(400).json({ Erro: `Erro ao criar um usuario: ${e}` });
+      }
     }
   }
 };
