@@ -50,6 +50,7 @@ export const getAll = async () => {
             nome: true,
             tipo: true,
             matricula: true,
+            consultas: true
         }
     })
     return pacientes
