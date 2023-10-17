@@ -17,28 +17,30 @@ model Usuario {
 }
 
 model Paciente {
-  id        Int        @id @default(autoincrement())
-  nome      String
-  tipo      String
-  matricula String
-  telefone  String?
-  consultas Consulta[]
-  usuario   Usuario    @relation(fields: [usuarioId], references: [id])
-  usuarioId Int        @unique
+  id             Int        @id @default(autoincrement())
+  nome           String
+  tipo           String
+  matricula      String
+  dataNascimento String
+  telefone       String?
+  consultas      Consulta[]
+  usuario        Usuario    @relation(fields: [usuarioId], references: [id])
+  usuarioId      Int        @unique
 
   @@map("pacientes")
 }
 
 model Consulta {
-  id             Int           @id @default(autoincrement())
-  data           DateTime
-  status         String
-  observacao     String
-  servico        String
-  pacienteId     Int?
-  profissionalId Int?
-  Paciente       Paciente?     @relation(fields: [pacienteId], references: [id])
-  Profissional   Profissional? @relation(fields: [profissionalId], references: [id])
+  id               Int           @id @default(autoincrement())
+  data             DateTime?
+  status           String
+  observacao       String
+  servico          String?
+  pacienteId       Int?
+  profissionalId   Int?
+  Paciente         Paciente?     @relation(fields: [pacienteId], references: [id])
+  Profissional     Profissional? @relation(fields: [profissionalId], references: [id])
+  data_solicitacao DateTime      @default(now())
 
   @@map("consultas")
 }

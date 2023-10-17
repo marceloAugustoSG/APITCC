@@ -4,16 +4,16 @@ import {
   getAll,
   getById,
   updateProfissional,
-  
+
 } from "../models/profissional.model.js";
 
 export const create = async (req, res) => {
   try {
     const profissional = await createProfissional(req.body);
 
-    res.status(200).send(profissional);
+    res.status(200).json(profissional);
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).json(e);
     res.json({ Erro: "Erro ao criar um profissional" });
   }
 };
@@ -25,9 +25,9 @@ export const get = async (req, res) => {
       res
         .status(200)
         .json({ message: "Nenhuma profissional cadastrado no sistema" });
-    } else res.status(200).send(profisionais);
+    } else res.status(200).json(profisionais);
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).json(e);
   }
 };
 
@@ -37,10 +37,10 @@ export const getId = async (req, res) => {
     if (!profisional) {
       res.status(400).json({ message: "profissional não encontrado" }).send();
     } else {
-      res.status(200).send(profisional);
+      res.status(200).json(profisional);
     }
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).json(e);
   }
 };
 
@@ -50,9 +50,9 @@ export const update = async (req, res) => {
       Number(req.params.id),
       req.body
     );
-    res.status(200).send(profissional);
+    res.status(200).json(profissional);
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).json(e);
   }
 };
 
@@ -63,8 +63,7 @@ export const excluir = async (req, res) => {
     res
       .status(200)
       .json({ message: "Profissional excluido com sucesso" })
-      .send();
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).json(e);
   }
 };

@@ -1,36 +1,22 @@
-import {
-  createConsulta,
-  getAll,
-  getById,
-  updateConsulta,
-  deletarConsulta,
-  deleteAllConsultas,
-} from "../models/consulta.model.js";
-
-const opcoesLocais = { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+import Consulta from '../models/consulta.model'
 
 export const create = async (req, res) => {
   try {
-    const consulta = await createConsulta(req.body);
-    consulta.data = consulta.data.toLocaleString('pt-BR', opcoesLocais)
-
-    res.status(200).send(consulta);
+    const consulta = await Consulta.create(req.body);
+    res.status(200).json(consulta);
   } catch (e) {
     console.log(`${e}`)
     res.status(400).json({ message: "erro ao criar uma consulta", e });
   }
 };
-
 export const getId = async (req, res) => {
   try {
-    const consulta = await getById(Number(req.params.id));
+    const consulta = await Consulta.getById(Number(req.params.id));
 
     if (!consulta) {
       res.status(400).json({ message: "Consulta não encontrada" });
     } else {
-
-      consulta.data = consulta.data.toLocaleString('pt-BR', opcoesLocais)
-      res.status(200).send(consulta);
+      res.status(200).json(consulta);
     }
   } catch (e) {
     res.status(400).send(e);
@@ -39,20 +25,17 @@ export const getId = async (req, res) => {
 
 export const get = async (req, res) => {
   try {
-    const consultas = await getAll();
+    const consultas = await Consulta.getAll();
 
     if (consultas.length === 0) {
       res
         .status(200)
         .json({ message: "Nenhuma consulta foi feita no sistema" });
     } else {
-      consultas.forEach(data => {
-        data.data = data.data.toLocaleString('pt-BR', opcoesLocais)
-      })
-      res.status(200).send(consultas);
+      res.status(200).json(consultas);
     }
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).json(e);
   }
 };
 
@@ -60,27 +43,27 @@ export const update = async (req, res) => {
   const id = req.params.id;
   const data = req.body;
   try {
-    const consulta = await updateConsulta(Number(id), data);
-    res.status(200).send(consulta);
+    const consulta = await Consulta.update(Number(id), data);
+    res.status(200).json(consulta);
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).json(e);
   }
 };
 
 export const excluir = async (req, res) => {
   try {
-    await deletarConsulta(Number(req.params.id));
+    await Consulta.delete(Number(req.params.id));
     res.status(200).send();
   } catch (e) {
-    res.status(400).send(e.message);
+    res.status(400).json(e.message);
   }
 };
 
 export const excluirTodasAsConsultas = async (req, res) => {
   try {
-    await deleteAllConsultas();
+    await Consulta.deleteAll();
     res.status(200).json({ message: "Todas as consultas foram excluidas" });
   } catch (e) {
-    res.status(400).send(e).json({ error: "erro interno" });
+    res.status(400).json(e).json({ error: "erro interno" });
   }
 };

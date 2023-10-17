@@ -1,4 +1,4 @@
-import { createUsuario, getAll, deletarUsuario, getById, updateUsuario } from "../models/usuario.model.js";
+import Usuario from "../models/usuario.model.js";
 import { prisma } from "../services/prisma.js";
 import bcrypt from 'bcrypt'
 import jwt from "jsonwebtoken";
@@ -8,8 +8,7 @@ export const create = async (req, res) => {
   const { email, password } = req.body
 
   if (!email.endsWith('@edu.ufes.br')) {
-    res.status(404).json({ message: "email nao aceito" })
-
+    res.status(404).json({ message: "email não aceito" })
   } else {
     const user = await prisma.usuario.findUnique({
       where: {
@@ -35,10 +34,11 @@ export const create = async (req, res) => {
           Paciente: {
             nome: req.body.Paciente.nome,
             tipo: req.body.Paciente.tipo,
-            matricula: req.body.Paciente.matricula
+            matricula: req.body.Paciente.matricula,
+            dataNascimento: req.body.Paciente.dataNascimento
           }
         }
-        await createUsuario(usuarioCriado)
+        await Usuario.create(usuarioCriado)
         res.status(200).json({ message: `usuario criado com sucesso!` });
       } catch (e) {
         res.status(400).json({ Erro: `Erro ao criar um usuario: ${e}` });
@@ -49,7 +49,7 @@ export const create = async (req, res) => {
 
 export const get = async (req, res) => {
   try {
-    const usuarios = await getAll();
+    const usuarios = await Usuario.getAll();
     if (usuarios.length === 0) {
       res
         .status(200)
@@ -63,7 +63,7 @@ export const get = async (req, res) => {
 
 export const getId = async (req, res) => {
   try {
-    const usuario = await getById(Number(req.params.id));
+    const usuario = await Usuario.getById(Number(req.params.id));
     if (!usuario) {
       res.status(400).json({ message: "Usuario não encontrado" }).send();
     } else {
@@ -76,7 +76,7 @@ export const getId = async (req, res) => {
 
 export const update = async (req, res) => {
   try {
-    const usuario = await updateUsuario(Number(req.params.id), req.body);
+    const usuario = await Usuario.update(Number(req.params.id), req.body);
     if (!usuario) {
       res.status(400).json({ message: "Usuario não encontrado" }).send();
     } else {
@@ -98,7 +98,7 @@ export const excluir = async (req, res) => {
       res.status(400).json({ message: "usuario não encontrado" }).send();
 
     } else {
-      await deletarUsuario(Number(req.params.id));
+      await Usuario.delete(Number(req.params.id));
       res.status(200).json({ message: "usuario excluido com sucesso" }).send();
     }
 

@@ -1,105 +1,108 @@
 import { prisma } from '../services/prisma.js'
 
+class Paciente {
 
+    async create(data) {
+        const paciente = await prisma.paciente.create({
+            data: {
+                nome: data.nome,
+                tipo: data.tipo,
+                matricula: data.matricula,
+                telefone: data.telefone,
 
-// Função para criar um novo paciente
-export const createPaciente = async (data) => {
-    const paciente = await prisma.paciente.create({
-        data: {
-            nome: data.nome,
-            tipo: data.tipo,
-            matricula: data.matricula,
-            telefone: data.telefone,
-
-            usuario: {
-                connect: { id: data.usuarioId },
-            },
-        },
-        select: {
-            id: true,
-            nome: true,
-            tipo: true,
-            matricula: true,
-            telefone: true,
-            usuario: {
-                select: {
-                    id: true,
-                    email: true,
-                    password: true,
+                usuario: {
+                    connect: { id: data.usuarioId },
                 },
             },
-            usuarioId: true
-        },
-    });
-
-    return paciente;
-};
-
-
-export const getAll = async () => {
-    const pacientes = await prisma.paciente.findMany({
-        select: {
-            usuario: {
-                select: {
-                    id: true,
-                    email: true,
-                    password: true
-                }
+            select: {
+                id: true,
+                nome: true,
+                tipo: true,
+                matricula: true,
+                telefone: true,
+                usuario: {
+                    select: {
+                        id: true,
+                        email: true,
+                        password: true,
+                    },
+                },
+                usuarioId: true
             },
-            id: true,
-            nome: true,
-            tipo: true,
-            matricula: true,
-            consultas: true
-        }
-    })
-    return pacientes
+        });
+
+        return paciente;
+    };
+
+
+    async getAll() {
+        const pacientes = await prisma.paciente.findMany({
+            select: {
+                usuario: {
+                    select: {
+                        id: true,
+                        email: true,
+                        password: true
+                    }
+                },
+                id: true,
+                nome: true,
+                tipo: true,
+                matricula: true,
+                consultas: true
+            }
+        })
+        return pacientes
+    }
+
+    async getById(id) {
+        const paciente = await prisma.paciente.findUnique({
+            where: {
+                id
+            }, select: {
+                id: true,
+                nome: true,
+                email: true,
+
+                password: false,
+                tipo: true,
+                matricula: true,
+                consultas: true
+            }
+
+        })
+        return paciente
+    }
+
+    async update(id, data) {
+
+        const paciente = await prisma.paciente.update({
+            where: {
+                id
+            },
+            data,
+            select: {
+                id: true,
+                nome: true,
+                email: true,
+                password: false,
+                tipo: true,
+                matricula: true
+            }
+        })
+        return paciente
+
+    }
+
+
+    async delete(id) {
+        const usuario = await prisma.paciente.delete({
+            where: {
+                id
+            }
+        })
+        return usuario;
+    }
 }
 
-export const getById = async (id) => {
-    const paciente = await prisma.paciente.findUnique({
-        where: {
-            id
-        }, select: {
-            id: true,
-            nome: true,
-            email: true,
-            password: false,
-            tipo: true,
-            matricula: true,
-            consultas: true
-        }
-
-    })
-    return paciente
-}
-
-export const updatePaciente = async (id, data) => {
-
-    const paciente = await prisma.paciente.update({
-        where: {
-            id
-        },
-        data,
-        select: {
-            id: true,
-            nome: true,
-            email: true,
-            password: false,
-            tipo: true,
-            matricula: true
-        }
-    })
-    return paciente
-
-}
-
-
-export const deletarPaciente = async (id) => {
-    const usuario = await prisma.paciente.delete({
-        where: {
-            id
-        }
-    })
-    return usuario;
-}
+export default new Paciente();
