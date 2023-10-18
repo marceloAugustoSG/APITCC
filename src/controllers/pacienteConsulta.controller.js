@@ -7,14 +7,10 @@ export const createNewConsulta = async (req, res) => {
         data.pacienteId = idPaciente
         const consultaPaciente = await ConsultaPaciente.createConsultaPaciente(idPaciente, data)
         res.status(200).json(consultaPaciente)
-
     } catch (e) {
         res.status(404).json({ message: `${e}` })
-
     }
-
 }
-
 export const getPacienteConsultas = async (req, res) => {
     try {
         const { id } = req.params
@@ -29,7 +25,6 @@ export const getPacienteConsultas = async (req, res) => {
         res.status(400).json({ message: `Usuario não encontrado` })
     }
 }
-
 export const atualizarConsultaPaciente = async (req, res) => {
     const id = Number(req.params.id)
     const data = req.body

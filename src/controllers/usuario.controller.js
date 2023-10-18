@@ -19,7 +19,6 @@ export const create = async (req, res) => {
     if (!email) {
       res.status(404).json({ message: "Email inválido" })
     }
-
     if (!password) {
       res.status(404).json({ message: "Senha inválida" })
     } if (user) {
@@ -60,7 +59,6 @@ export const get = async (req, res) => {
   }
 };
 
-
 export const getId = async (req, res) => {
   try {
     const usuario = await Usuario.getById(Number(req.params.id));
@@ -73,7 +71,6 @@ export const getId = async (req, res) => {
     res.status(400).send(e);
   }
 };
-
 export const update = async (req, res) => {
   try {
     const usuario = await Usuario.update(Number(req.params.id), req.body);
@@ -128,6 +125,7 @@ export function checkToken(req, res, next) {
 }
 
 export const logar = async (req, res) => {
+  console.log('teste')
   try {
     const { email, password } = req.body
     const usuario = await prisma.usuario.findUnique({

@@ -3,37 +3,41 @@ import { prisma } from '../services/prisma.js'
 class Paciente {
 
     async create(data) {
-        const paciente = await prisma.paciente.create({
-            data: {
-                nome: data.nome,
-                tipo: data.tipo,
-                matricula: data.matricula,
-                telefone: data.telefone,
-
-                usuario: {
-                    connect: { id: data.usuarioId },
-                },
-            },
-            select: {
-                id: true,
-                nome: true,
-                tipo: true,
-                matricula: true,
-                telefone: true,
-                usuario: {
-                    select: {
-                        id: true,
-                        email: true,
-                        password: true,
+        try {
+            const paciente = await prisma.paciente.create({
+                data: {
+                    nome: data.nome,
+                    tipo: data.tipo,
+                    matricula: data.matricula,
+                    dataNascimento: data.dataNascimento,
+                    telefone: data.telefone,
+                    usuario: {
+                        connect: { id: data.usuarioId },
                     },
                 },
-                usuarioId: true
-            },
-        });
+                select: {
+                    id: true,
+                    nome: true,
+                    tipo: true,
+                    matricula: true,
+                    telefone: true,
+                    usuario: {
+                        select: {
+                            id: true,
+                            email: true,
+                            password: true,
+                        },
+                    },
+                    usuarioId: true
+                },
+            });
 
-        return paciente;
-    };
-
+            return paciente;
+        } catch (error) {
+            console.error("Erro ao criar paciente:", error);
+            throw error; // Lança o erro novamente para que ele possa ser tratado no nível superior
+        }
+    }
 
     async getAll() {
         const pacientes = await prisma.paciente.findMany({

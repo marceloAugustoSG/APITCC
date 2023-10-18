@@ -1,7 +1,5 @@
 import { prisma } from "../services/prisma.js";
 
-
-
 class Consulta {
   async create(data) {
     const consulta = await prisma.consulta.create({
@@ -17,11 +15,9 @@ class Consulta {
         data_solicitacao: true
       },
     });
-
     return consulta;
   };
   async getAll() {
-
     const consultas = await prisma.consulta.findMany({
       select: {
         id: true,
@@ -39,7 +35,6 @@ class Consulta {
         Profissional: {
           select: {
             nome: true,
-
           }
         }
       },
@@ -48,8 +43,6 @@ class Consulta {
   };
 
   async getById(id) {
-
-
     const consulta = await prisma.consulta.findUnique({
       where: {
         id,
