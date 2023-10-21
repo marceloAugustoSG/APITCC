@@ -20,7 +20,6 @@ export const getAll = async () => {
       id: true,
       nome: true,
       especialidade: true,
-      consultas: true,
     },
   });
 

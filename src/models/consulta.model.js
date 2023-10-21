@@ -29,11 +29,13 @@ class Consulta {
         data_solicitacao: true,
         Paciente: {
           select: {
-            nome: true
+            nome: true,
+            tipo: true
           }
         },
         Profissional: {
           select: {
+            id: true,
             nome: true,
           }
         }

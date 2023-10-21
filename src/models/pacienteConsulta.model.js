@@ -40,7 +40,9 @@ class ConsultaPaciente {
                         status: true,
                         servico: true, observacao: true,
                         Paciente: true,
-                        Profissional: true, id: true
+                        Profissional: true,
+                        id: true,
+                        data_solicitacao: true
                     }
                 },
 
