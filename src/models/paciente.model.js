@@ -35,25 +35,20 @@ class Paciente {
             return paciente;
         } catch (error) {
             console.error("Erro ao criar paciente:", error);
-            throw error; // Lança o erro novamente para que ele possa ser tratado no nível superior
+            throw error;
         }
     }
 
     async getAll() {
         const pacientes = await prisma.paciente.findMany({
             select: {
-                usuario: {
-                    select: {
-                        id: true,
-                        email: true,
-                        password: true
-                    }
-                },
+                usuario: false,
                 id: true,
                 nome: true,
                 tipo: true,
                 matricula: true,
-                consultas: true
+                consultas: true,
+                notificacoes: true
             }
         })
         return pacientes
@@ -62,18 +57,16 @@ class Paciente {
     async getById(id) {
         const paciente = await prisma.paciente.findUnique({
             where: {
-                id
+                id,
             }, select: {
-                id: true,
                 nome: true,
-                email: true,
-
-                password: false,
                 tipo: true,
+                dataNascimento: true,
                 matricula: true,
-                consultas: true
+                consultas: true,
+                notificacoes: true,
+                telefone: true
             }
-
         })
         return paciente
     }

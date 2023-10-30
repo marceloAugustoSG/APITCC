@@ -77,6 +77,7 @@ class Consulta {
         status: true,
         observacao: true,
         profissionalId: true,
+        data_solicitacao: true,
       },
     });
     return consulta;

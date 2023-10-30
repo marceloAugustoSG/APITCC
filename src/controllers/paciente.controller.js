@@ -24,13 +24,13 @@ export const getId = async (req, res) => {
   try {
     const paciente = await Paciente.getById(Number(req.params.id));
     if (!paciente) {
-      res.status(400).json({ message: "Paciente não encontrado" }).send();
+      res.status(404).json({ message: "Paciente não encontrado" }).send();
     } else {
-
       res.status(200).json(paciente);
     }
   } catch (e) {
     res.status(400).json(e);
+    console.log(e)
   }
 };
 

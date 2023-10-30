@@ -58,11 +58,17 @@ export const update = async (req, res) => {
 
 export const excluir = async (req, res) => {
   try {
-    await deletarProfissional(Number(req.params.id));
 
-    res
-      .status(200)
-      .json({ message: "Profissional excluido com sucesso" })
+    const profisional = await getById(Number(req.params.id));
+    if (!profisional) {
+      res.status(400).json({ message: "profissional não encontrado" })
+    } else {
+      await deletarProfissional(Number(req.params.id));
+
+      res
+        .status(200)
+        .json({ message: "Profissional excluido com sucesso" })
+    }
   } catch (e) {
     res.status(400).json(e);
   }

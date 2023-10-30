@@ -11,21 +11,23 @@ model Usuario {
   id       Int       @id @default(autoincrement())
   email    String    @unique
   password String
+  regra    String
   Paciente Paciente?
 
   @@map("usuarios")
 }
 
 model Paciente {
-  id             Int        @id @default(autoincrement())
+  id             Int           @id @default(autoincrement())
   nome           String
   tipo           String
   matricula      String
   dataNascimento String
   telefone       String?
   consultas      Consulta[]
-  usuario        Usuario    @relation(fields: [usuarioId], references: [id])
-  usuarioId      Int        @unique
+  usuario        Usuario       @relation(fields: [usuarioId], references: [id])
+  usuarioId      Int           @unique
+  notificacoes   Notificacao[]
 
   @@map("pacientes")
 }
@@ -52,4 +54,13 @@ model Profissional {
   consultas     Consulta[]
 
   @@map("profissionais")
+}
+
+model Notificacao {
+  id         Int       @id @default(autoincrement())
+  mensagem   String
+  Paciente   Paciente? @relation(fields: [pacienteId], references: [id])
+  pacienteId Int?
+
+  @@map("notificacoes")
 }

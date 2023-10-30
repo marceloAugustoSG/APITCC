@@ -1,28 +1,27 @@
 import { prisma } from "../services/prisma.js";
 
 class Usuario {
-
-
-
   async create(data) {
     console.log(data)
     const usuario = await prisma.usuario.create({
       data: {
         email: data.email,
         password: data.password,
+        regra: data.regra,
         Paciente: {
           create: {
             nome: data.Paciente.nome,
             tipo: data.Paciente.tipo,
             matricula: data.Paciente.matricula,
-            dataNascimento: data.Paciente.dataNascimento
+            dataNascimento: data.Paciente.dataNascimento,
           },
         },
       },
       select: {
         id: true,
         email: true,
-        password: true,
+        password: false,
+        regra: true,
         Paciente: {
           select: {
             id: true,
@@ -30,39 +29,26 @@ class Usuario {
             tipo: true,
             matricula: true,
             consultas: true,
-            dataNascimento: true
+            dataNascimento: true,
+            notificacoes: true,
           }
         }
       },
     });
-
     return usuario;
   };
-
-
-
   async getAll() {
     const usuarios = await prisma.usuario.findMany({
       select: {
         id: true,
         email: true,
-        password: true,
-        Paciente: {
-          select: {
-            id: true,
-            nome: true,
-            tipo: true,
-            matricula: true,
-            consultas: true,
-            dataNascimento: true
-          }
-        }
+        regra: true,
+        password: false,
+        Paciente: true
       }
     })
-
     return usuarios;
   };
-
   async getById(id) {
     const usuario = await prisma.usuario.findUnique({
       where: {
@@ -72,17 +58,7 @@ class Usuario {
         id: true,
         email: true,
         password: false,
-        Paciente: {
-          select: {
-            id: true,
-            nome: true,
-            tipo: true,
-            matricula: true,
-            usuarioId: false,
-            consultas: true,
-            dataNascimento: true
-          }
-        }
+        Paciente: true
       },
     });
     return usuario;
@@ -93,14 +69,12 @@ class Usuario {
       where: {
         id,
       },
-      data: {
-        data
-      },
+      data,
       select: {
         id: true,
         email: true,
         password: true,
-        Paciente: true,
+        Paciente: false,
       },
     });
     return usuario;

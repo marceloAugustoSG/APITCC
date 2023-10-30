@@ -1,3 +1,4 @@
+import { number } from "yup";
 import Usuario from "../models/usuario.model.js";
 import { prisma } from "../services/prisma.js";
 import bcrypt from 'bcrypt'
@@ -28,8 +29,9 @@ export const create = async (req, res) => {
       const hashPassword = await bcrypt.hash(password, 10)
       try {
         const usuarioCriado = {
-          email,
+          email: req.body.email,
           password: hashPassword,
+          regra: req.body.regra,
           Paciente: {
             nome: req.body.Paciente.nome,
             tipo: req.body.Paciente.tipo,
@@ -63,7 +65,7 @@ export const getId = async (req, res) => {
   try {
     const usuario = await Usuario.getById(Number(req.params.id));
     if (!usuario) {
-      res.status(400).json({ message: "Usuario não encontrado" }).send();
+      res.status(404).json({ message: "Usuario não encontrado" }).send();
     } else {
       res.status(200).send(usuario);
     }
@@ -73,11 +75,12 @@ export const getId = async (req, res) => {
 };
 export const update = async (req, res) => {
   try {
-    const usuario = await Usuario.update(Number(req.params.id), req.body);
+    const usuario = await Usuario.getById(Number(req.params.id));
     if (!usuario) {
       res.status(400).json({ message: "Usuario não encontrado" }).send();
     } else {
-      res.status(200).send(usuario);
+      const usuarioAtualizado = await Usuario.update(Number(req.params.id), req.body)
+      res.status(200).send(usuarioAtualizado);
     }
   } catch (e) {
     res.status(400).send(`${e}`);
@@ -116,6 +119,7 @@ export function checkToken(req, res, next) {
   try {
     const secret = process.env.SECRET
     jwt.verify(token, secret)
+    // implementar logico para autorização 
     next()
 
   } catch (error) {
@@ -135,6 +139,7 @@ export const logar = async (req, res) => {
         id: true,
         email: true,
         password: true,
+        regra: true,
         Paciente: {
           select: {
             id: true,
