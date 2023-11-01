@@ -32,6 +32,7 @@ export const create = async (req, res) => {
           email: req.body.email,
           password: hashPassword,
           regra: req.body.regra,
+          notificacoes: req.body.notificacoes,
           Paciente: {
             nome: req.body.Paciente.nome,
             tipo: req.body.Paciente.tipo,
@@ -39,7 +40,7 @@ export const create = async (req, res) => {
             dataNascimento: req.body.Paciente.dataNascimento
           }
         }
-        await Usuario.create(usuarioCriado)
+        await Usuario.CriarUsuario(usuarioCriado)
         res.status(200).json({ message: `usuario criado com sucesso!` });
       } catch (e) {
         res.status(400).json({ Erro: `Erro ao criar um usuario: ${e}` });
@@ -50,7 +51,7 @@ export const create = async (req, res) => {
 
 export const get = async (req, res) => {
   try {
-    const usuarios = await Usuario.getAll();
+    const usuarios = await Usuario.ListarTodosUsuarios();
     if (usuarios.length === 0) {
       res
         .status(200)
@@ -63,7 +64,7 @@ export const get = async (req, res) => {
 
 export const getId = async (req, res) => {
   try {
-    const usuario = await Usuario.getById(Number(req.params.id));
+    const usuario = await Usuario.BuscarUsuarioId(Number(req.params.id));
     if (!usuario) {
       res.status(404).json({ message: "Usuario não encontrado" }).send();
     } else {
@@ -75,11 +76,11 @@ export const getId = async (req, res) => {
 };
 export const update = async (req, res) => {
   try {
-    const usuario = await Usuario.getById(Number(req.params.id));
+    const usuario = await Usuario.BuscarUsuarioId(Number(req.params.id));
     if (!usuario) {
       res.status(400).json({ message: "Usuario não encontrado" }).send();
     } else {
-      const usuarioAtualizado = await Usuario.update(Number(req.params.id), req.body)
+      const usuarioAtualizado = await Usuario.AtualizarUsuario(Number(req.params.id), req.body)
       res.status(200).send(usuarioAtualizado);
     }
   } catch (e) {
@@ -98,7 +99,7 @@ export const excluir = async (req, res) => {
       res.status(400).json({ message: "usuario não encontrado" }).send();
 
     } else {
-      await Usuario.delete(Number(req.params.id));
+      await Usuario.ExcluirUsuario(Number(req.params.id));
       res.status(200).json({ message: "usuario excluido com sucesso" }).send();
     }
 
@@ -120,6 +121,7 @@ export function checkToken(req, res, next) {
     const secret = process.env.SECRET
     jwt.verify(token, secret)
     // implementar logico para autorização 
+    console.log(res.body)
     next()
 
   } catch (error) {

@@ -6,12 +6,11 @@ export const create = async (req, res) => {
   try {
     // Fuso horário de Brasília
     const brasiliaTimeZone = 'America/Sao_Paulo';
-
     // Obtenha a data atual no fuso horário de Brasília
     const dataAtual = new Date();
     const brasiliaDate = utcToZonedTime(dataAtual, brasiliaTimeZone);
     const dataConsulta = req.body
-    const consulta = await Consulta.create(dataConsulta);
+    const consulta = await Consulta.CriarConsulta(dataConsulta);
     consulta.data_solicitacao = format(brasiliaDate, "yyyy-MM-dd'T'HH:mm:ssXXX"), // Formate a data
       res.status(200).json(consulta);
   } catch (e) {
@@ -21,20 +20,20 @@ export const create = async (req, res) => {
 };
 export const getId = async (req, res) => {
   try {
-    const consulta = await Consulta.getById(Number(req.params.id));
+    const consulta = await Consulta.BuscarConsultaId(Number(req.params.id));
     if (!consulta) {
       res.status(404).json({ message: "Consulta não encontrada" });
     } else {
       res.status(200).json(consulta);
     }
+
   } catch (e) {
     res.status(400).send(e);
   }
 };
-
 export const get = async (req, res) => {
   try {
-    const consultas = await Consulta.getAll();
+    const consultas = await Consulta.ListarTodasConsultas();
 
     if (consultas.length === 0) {
       res
@@ -52,22 +51,22 @@ export const update = async (req, res) => {
   const id = req.params.id;
   const data = req.body;
   try {
-
-    const consultaIsExist = await Consulta.getById(Number(id));
+    const consultaIsExist = await Consulta.BuscarConsultaId(Number(id));
     if (!consultaIsExist) {
       res.status(404).json({ message: "Essa consulta não existe" })
     } else {
-      const consulta = await Consulta.update(Number(id), data);
+      const consulta = await Consulta.AtualizarConsulta(Number(id), data);
       res.status(200).json(consulta);
     }
   } catch (e) {
+    console.log(`${e}`)
     res.status(400).json(e);
   }
 };
 
 export const excluir = async (req, res) => {
   try {
-    const consulta = await Consulta.getById(Number(req.params.id));
+    const consulta = await Consulta.ExcluirConsulta(Number(req.params.id));
 
     if (!consulta) {
       res.status(404).json({ message: "Essa consulta não existe" })

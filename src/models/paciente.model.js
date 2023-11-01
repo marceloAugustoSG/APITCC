@@ -2,7 +2,7 @@ import { prisma } from '../services/prisma.js'
 
 class Paciente {
 
-    async create(data) {
+    async CriarPaciente(data) {
         try {
             const paciente = await prisma.paciente.create({
                 data: {
@@ -39,7 +39,7 @@ class Paciente {
         }
     }
 
-    async getAll() {
+    async ListarTodosPacientes() {
         const pacientes = await prisma.paciente.findMany({
             select: {
                 usuario: false,
@@ -48,13 +48,12 @@ class Paciente {
                 tipo: true,
                 matricula: true,
                 consultas: true,
-                notificacoes: true
             }
         })
         return pacientes
     }
 
-    async getById(id) {
+    async BuscarPacienteId(id) {
         const paciente = await prisma.paciente.findUnique({
             where: {
                 id,
@@ -64,14 +63,13 @@ class Paciente {
                 dataNascimento: true,
                 matricula: true,
                 consultas: true,
-                notificacoes: true,
                 telefone: true
             }
         })
         return paciente
     }
 
-    async update(id, data) {
+    async AtualizarPaciente(id, data) {
 
         const paciente = await prisma.paciente.update({
             where: {
@@ -92,7 +90,7 @@ class Paciente {
     }
 
 
-    async delete(id) {
+    async ExcluirPaciente(id) {
         const usuario = await prisma.paciente.delete({
             where: {
                 id

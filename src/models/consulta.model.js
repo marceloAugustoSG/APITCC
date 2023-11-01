@@ -1,7 +1,7 @@
 import { prisma } from "../services/prisma.js";
 
 class Consulta {
-  async create(data) {
+  async CriarConsulta(data) {
     const consulta = await prisma.consulta.create({
       data,
       select: {
@@ -17,7 +17,7 @@ class Consulta {
     });
     return consulta;
   };
-  async getAll() {
+  async ListarTodasConsultas() {
     const consultas = await prisma.consulta.findMany({
       select: {
         id: true,
@@ -29,8 +29,10 @@ class Consulta {
         data_solicitacao: true,
         Paciente: {
           select: {
+            id: true,
             nome: true,
-            tipo: true
+            tipo: true,
+            matricula: true
           }
         },
         Profissional: {
@@ -44,7 +46,7 @@ class Consulta {
     return consultas;
   };
 
-  async getById(id) {
+  async BuscarConsultaId(id) {
     const consulta = await prisma.consulta.findUnique({
       where: {
         id,
@@ -65,7 +67,7 @@ class Consulta {
     return consulta;
   };
 
-  async update(id, data) {
+  async AtualizarConsulta(id, data) {
     const consulta = await prisma.consulta.update({
       where: {
         id,
@@ -76,14 +78,13 @@ class Consulta {
         data: true,
         status: true,
         observacao: true,
-        profissionalId: true,
-        data_solicitacao: true,
+        data_solicitacao: true
       },
     });
     return consulta;
   };
 
-  async delete(id) {
+  async ExcluirConsulta(id) {
     await prisma.consulta.delete({
       where: {
         id,

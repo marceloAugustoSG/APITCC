@@ -34,6 +34,7 @@ class ConsultaPaciente {
                 nome: true,
                 matricula: true,
                 tipo: true,
+                dataNascimento: true,
                 consultas: {
                     select: {
                         data: true,

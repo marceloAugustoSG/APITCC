@@ -8,26 +8,26 @@ datasource db {
 }
 
 model Usuario {
-  id       Int       @id @default(autoincrement())
-  email    String    @unique
-  password String
-  regra    String
-  Paciente Paciente?
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
+  regra        String
+  Paciente     Paciente?
+  notificacoes Notificacao[]
 
   @@map("usuarios")
 }
 
 model Paciente {
-  id             Int           @id @default(autoincrement())
+  id             Int        @id @default(autoincrement())
   nome           String
   tipo           String
   matricula      String
-  dataNascimento String
+  dataNascimento DateTime
   telefone       String?
   consultas      Consulta[]
-  usuario        Usuario       @relation(fields: [usuarioId], references: [id])
-  usuarioId      Int           @unique
-  notificacoes   Notificacao[]
+  usuario        Usuario    @relation(fields: [usuarioId], references: [id])
+  usuarioId      Int        @unique
 
   @@map("pacientes")
 }
@@ -57,10 +57,10 @@ model Profissional {
 }
 
 model Notificacao {
-  id         Int       @id @default(autoincrement())
-  mensagem   String
-  Paciente   Paciente? @relation(fields: [pacienteId], references: [id])
-  pacienteId Int?
+  id        Int      @id @default(autoincrement())
+  mensagem  String
+  Usuario   Usuario? @relation(fields: [usuarioId], references: [id])
+  usuarioId Int?
 
   @@map("notificacoes")
 }

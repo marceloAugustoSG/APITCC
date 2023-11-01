@@ -1,13 +1,14 @@
 import { prisma } from "../services/prisma.js";
 
 class Usuario {
-  async create(data) {
+  async CriarUsuario(data) {
     console.log(data)
     const usuario = await prisma.usuario.create({
       data: {
         email: data.email,
         password: data.password,
         regra: data.regra,
+        notificacoes: data.notificacoes,
         Paciente: {
           create: {
             nome: data.Paciente.nome,
@@ -30,26 +31,26 @@ class Usuario {
             matricula: true,
             consultas: true,
             dataNascimento: true,
-            notificacoes: true,
           }
         }
       },
     });
     return usuario;
   };
-  async getAll() {
+  async ListarTodosUsuarios() {
     const usuarios = await prisma.usuario.findMany({
       select: {
         id: true,
         email: true,
         regra: true,
+        notificacoes: true,
         password: false,
         Paciente: true
       }
     })
     return usuarios;
   };
-  async getById(id) {
+  async BuscarUsuarioId(id) {
     const usuario = await prisma.usuario.findUnique({
       where: {
         id,
@@ -64,7 +65,7 @@ class Usuario {
     return usuario;
   };
 
-  async update(id, data) {
+  async AtualizarUsuario(id, data) {
     const usuario = await prisma.usuario.update({
       where: {
         id,
@@ -80,7 +81,7 @@ class Usuario {
     return usuario;
   };
 
-  async delete(idUsuario) {
+  async ExcluirUsuario(idUsuario) {
 
     //Encontrando o usuario
     const usuario = await prisma.usuario.findUnique({

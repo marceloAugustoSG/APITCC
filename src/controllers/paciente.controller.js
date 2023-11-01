@@ -4,7 +4,7 @@ export const create = async (req, res) => {
   try {
     const dataPaciente = req.body.dataPaciente
     console.log(dataPaciente)
-    const paciente = await Paciente.create(dataPaciente)
+    const paciente = await Paciente.CriarPaciente(dataPaciente)
     res.status(200).json(paciente);
   } catch (e) {
     res.status(400).json(`teste:${e}`);
@@ -12,7 +12,7 @@ export const create = async (req, res) => {
 };
 export const get = async (req, res) => {
   try {
-    const pacientes = await Paciente.getAll();
+    const pacientes = await Paciente.ListarTodosPacientes();
     if (pacientes.length === 0) {
       res.status(200).json({ message: "Nenhuma paciente cadastrado no sistema" });
     } else res.status(200).json(pacientes);
@@ -22,7 +22,7 @@ export const get = async (req, res) => {
 };
 export const getId = async (req, res) => {
   try {
-    const paciente = await Paciente.getById(Number(req.params.id));
+    const paciente = await Paciente.BuscarPacienteId(Number(req.params.id));
     if (!paciente) {
       res.status(404).json({ message: "Paciente não encontrado" }).send();
     } else {
@@ -36,7 +36,7 @@ export const getId = async (req, res) => {
 
 export const update = async (req, res) => {
   try {
-    const paciente = await Paciente.update(Number(req.params.id), req.body);
+    const paciente = await Paciente.AtualizarPaciente(Number(req.params.id), req.body);
     res.status(200).json(paciente);
   } catch (e) {
     res.status(400).json(e);
@@ -45,7 +45,7 @@ export const update = async (req, res) => {
 
 export const excluir = async (req, res) => {
   try {
-    await Paciente.delete(Number(req.params.id));
+    await Paciente.ExcluirPaciente(Number(req.params.id));
     res.status(200).json({ message: "usuario excluido com sucesso" }).send();
   } catch (e) {
     res.status(400).json({ e });

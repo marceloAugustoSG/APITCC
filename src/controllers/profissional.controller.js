@@ -1,4 +1,9 @@
 import {
+  AtualizarProfissional,
+  BuscarProfissionalId,
+  CriarProfissional,
+  ExcluirProfissional,
+  ListarTodosProfissionais,
   createProfissional,
   deletarProfissional,
   getAll,
@@ -9,7 +14,7 @@ import {
 
 export const create = async (req, res) => {
   try {
-    const profissional = await createProfissional(req.body);
+    const profissional = await CriarProfissional(req.body);
 
     res.status(200).json(profissional);
   } catch (e) {
@@ -20,7 +25,7 @@ export const create = async (req, res) => {
 
 export const get = async (req, res) => {
   try {
-    const profisionais = await getAll();
+    const profisionais = await ListarTodosProfissionais();
     if (profisionais.length === 0) {
       res
         .status(200)
@@ -33,7 +38,7 @@ export const get = async (req, res) => {
 
 export const getId = async (req, res) => {
   try {
-    const profisional = await getById(Number(req.params.id));
+    const profisional = await BuscarProfissionalId(Number(req.params.id));
     if (!profisional) {
       res.status(400).json({ message: "profissional não encontrado" }).send();
     } else {
@@ -46,7 +51,7 @@ export const getId = async (req, res) => {
 
 export const update = async (req, res) => {
   try {
-    const profissional = await updateProfissional(
+    const profissional = await AtualizarProfissional(
       Number(req.params.id),
       req.body
     );
@@ -59,11 +64,11 @@ export const update = async (req, res) => {
 export const excluir = async (req, res) => {
   try {
 
-    const profisional = await getById(Number(req.params.id));
+    const profisional = await BuscarProfissionalId(Number(req.params.id));
     if (!profisional) {
       res.status(400).json({ message: "profissional não encontrado" })
     } else {
-      await deletarProfissional(Number(req.params.id));
+      await ExcluirProfissional(Number(req.params.id));
 
       res
         .status(200)

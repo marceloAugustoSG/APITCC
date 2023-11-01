@@ -1,6 +1,6 @@
 import { prisma } from "../services/prisma.js";
 
-export const createProfissional = async (data) => {
+export const CriarProfissional = async (data) => {
   const profissional = await prisma.profissional.create({
     data,
     select: {
@@ -14,7 +14,7 @@ export const createProfissional = async (data) => {
   return profissional;
 };
 
-export const getAll = async () => {
+export const ListarTodosProfissionais = async () => {
   const profissionais = await prisma.profissional.findMany({
     select: {
       id: true,
@@ -26,7 +26,7 @@ export const getAll = async () => {
   return profissionais;
 };
 
-export const getById = async (id) => {
+export const BuscarProfissionalId = async (id) => {
   const profissional = await prisma.profissional.findUnique({
     where: {
       id,
@@ -41,7 +41,7 @@ export const getById = async (id) => {
   return profissional;
 };
 
-export const updateProfissional = async (id, data) => {
+export const AtualizarProfissional = async (id, data) => {
   const profissional = await prisma.profissional.update({
     where: {
       id,
@@ -57,7 +57,7 @@ export const updateProfissional = async (id, data) => {
   return profissional;
 };
 
-export const deletarProfissional = async (id) => {
+export const ExcluirProfissional = async (id) => {
   await prisma.profissional.delete({
     where: {
       id,
