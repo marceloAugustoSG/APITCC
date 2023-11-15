@@ -1,10 +1,44 @@
-import { number } from "yup";
 import Usuario from "../models/usuario.model.js";
 import { prisma } from "../services/prisma.js";
 import bcrypt from 'bcrypt'
-import jwt from "jsonwebtoken";
 
-export const create = async (req, res) => {
+export const createUsuario = async (req, res) => {
+
+  const { email, password } = req.body
+
+  const user = await prisma.usuario.findUnique({
+    where: {
+      email
+    }
+  })
+  if (!email) {
+    res.status(404).json({ message: "Email inválido" })
+  }
+  if (!password) {
+    res.status(404).json({ message: "Senha inválida" })
+  } if (user) {
+    res.status(404).json({ message: "usuário ja existe" })
+  } else {
+
+    const hashPassword = await bcrypt.hash(password, 10)
+    try {
+      const usuarioCriado = {
+        email: req.body.email,
+        password: hashPassword,
+        regra: req.body.regra
+
+      }
+      await Usuario.CriarUsuario(usuarioCriado)
+      res.status(200).json({ message: `usuario criado com sucesso!` });
+    } catch (e) {
+      res.status(400).json({ Erro: `Erro ao criar um usuario: ${e}` });
+    }
+
+  }
+
+};
+
+export const createUsuarioPaciente = async (req, res) => {
 
   const { email, password } = req.body
 
@@ -32,15 +66,15 @@ export const create = async (req, res) => {
           email: req.body.email,
           password: hashPassword,
           regra: req.body.regra,
-          notificacoes: req.body.notificacoes,
-          Paciente: {
-            nome: req.body.Paciente.nome,
-            tipo: req.body.Paciente.tipo,
-            matricula: req.body.Paciente.matricula,
-            dataNascimento: req.body.Paciente.dataNascimento
-          }
+          paciente: {
+            nome: req.body.paciente.nome,
+            tipo: req.body.paciente.tipo,
+            matricula: req.body.paciente.matricula,
+            notificacoes: req.body.paciente.notificacoes,
+            dataNascimento: req.body.paciente.dataNascimento,
+          },
         }
-        await Usuario.CriarUsuario(usuarioCriado)
+        await Usuario.CriarUsuarioPaciente(usuarioCriado)
         res.status(200).json({ message: `usuario criado com sucesso!` });
       } catch (e) {
         res.status(400).json({ Erro: `Erro ao criar um usuario: ${e}` });
@@ -108,73 +142,5 @@ export const excluir = async (req, res) => {
   }
 }
 
-export function checkToken(req, res, next) {
-  const authHeader = req.headers['authorization']
 
-  const token = authHeader && authHeader.split(" ")[1]
-  if (!token)
-    return res.status(401).json({
-      message: "Acesso negado"
-    })
 
-  try {
-    const secret = process.env.SECRET
-    jwt.verify(token, secret)
-    // implementar logico para autorização 
-    console.log(res.body)
-    next()
-
-  } catch (error) {
-    res.status(400).json({ message: "Token inválido" })
-
-  }
-}
-
-export const logar = async (req, res) => {
-  console.log('teste')
-  try {
-    const { email, password } = req.body
-    const usuario = await prisma.usuario.findUnique({
-      where: {
-        email
-      }, select: {
-        id: true,
-        email: true,
-        password: true,
-        regra: true,
-        Paciente: {
-          select: {
-            id: true,
-            nome: true,
-            tipo: true,
-            matricula: true,
-            consultas: true
-          }
-        }
-      }
-    })
-    if (!email) {
-      res.status(404).json({ message: "email vazio" })
-    }
-
-    if (!password) {
-      res.status(404).json({ message: "Senha vazia" })
-    }
-
-    if (!usuario) {
-      res.status(404).json({ message: "usuario não encontrado" })
-    }
-
-    const checkPassword = await bcrypt.compare(password, usuario.password)
-    if (!checkPassword) {
-      res.status(404).json({ message: "Senha inválida" })
-    }
-    const secret = process.env.SECRET
-    const token = jwt.sign({
-      id: usuario.id
-    }, secret)
-    res.status(200).json({ message: "Autenticado com sucesso", token, usuario })
-  } catch (error) {
-    return
-  }
-}

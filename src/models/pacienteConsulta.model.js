@@ -1,10 +1,6 @@
 import { prisma } from '../services/prisma.js'
 
 class ConsultaPaciente {
-
-
-
-
     async createConsultaPaciente(id, data) {
 
         const novaConsulta = await prisma.consulta.create({
@@ -21,8 +17,6 @@ class ConsultaPaciente {
         })
 
         return novaConsulta
-
-
     }
 
     async getAllConsultasPaciente(id) {
@@ -46,15 +40,10 @@ class ConsultaPaciente {
                         data_solicitacao: true
                     }
                 },
-
             },
         })
-
-
         return consultasPaciente
     }
-
-
 
     async updateConsultaPaciente(pacienteId, consultaId, data) {
 

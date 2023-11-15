@@ -3,6 +3,7 @@ import { prisma } from '../services/prisma.js'
 class Paciente {
 
     async CriarPaciente(data) {
+        console.log(data)
         try {
             const paciente = await prisma.paciente.create({
                 data: {
@@ -11,7 +12,7 @@ class Paciente {
                     matricula: data.matricula,
                     dataNascimento: data.dataNascimento,
                     telefone: data.telefone,
-                    usuario: {
+                    Usuario: {
                         connect: { id: data.usuarioId },
                     },
                 },
@@ -21,14 +22,15 @@ class Paciente {
                     tipo: true,
                     matricula: true,
                     telefone: true,
-                    usuario: {
+                    Usuario: {
                         select: {
                             id: true,
                             email: true,
                             password: true,
                         },
                     },
-                    usuarioId: true
+                    usuarioId: true,
+
                 },
             });
 
@@ -42,12 +44,15 @@ class Paciente {
     async ListarTodosPacientes() {
         const pacientes = await prisma.paciente.findMany({
             select: {
-                usuario: false,
+                Usuario: false,
                 id: true,
                 nome: true,
                 tipo: true,
                 matricula: true,
                 consultas: true,
+                dataNascimento: true,
+                notificacoes: true,
+                respostas: true
             }
         })
         return pacientes
@@ -75,15 +80,8 @@ class Paciente {
             where: {
                 id
             },
-            data,
-            select: {
-                id: true,
-                nome: true,
-                email: true,
-                password: false,
-                tipo: true,
-                matricula: true
-            }
+            data
+
         })
         return paciente
 

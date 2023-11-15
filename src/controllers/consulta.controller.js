@@ -1,18 +1,13 @@
 import Consulta from '../models/consulta.model'
-import { format } from 'date-fns';
-import { utcToZonedTime } from 'date-fns-tz';
+import { formatDate } from '../services/Date/Date';
 
 export const create = async (req, res) => {
   try {
-    // Fuso horário de Brasília
-    const brasiliaTimeZone = 'America/Sao_Paulo';
-    // Obtenha a data atual no fuso horário de Brasília
-    const dataAtual = new Date();
-    const brasiliaDate = utcToZonedTime(dataAtual, brasiliaTimeZone);
     const dataConsulta = req.body
     const consulta = await Consulta.CriarConsulta(dataConsulta);
-    consulta.data_solicitacao = format(brasiliaDate, "yyyy-MM-dd'T'HH:mm:ssXXX"), // Formate a data
-      res.status(200).json(consulta);
+    const dataFormatada = formatDate(consulta.data_solicitacao)
+    consulta.data_solicitacao = formatDate(dataFormatada)
+    res.status(200).json(consulta);
   } catch (e) {
     console.log(`${e}`);
     res.status(400).json({ message: "Erro ao criar uma consulta", error: e });
@@ -31,10 +26,11 @@ export const getId = async (req, res) => {
     res.status(400).send(e);
   }
 };
+
 export const get = async (req, res) => {
+
   try {
     const consultas = await Consulta.ListarTodasConsultas();
-
     if (consultas.length === 0) {
       res
         .status(200)

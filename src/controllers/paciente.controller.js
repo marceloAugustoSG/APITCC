@@ -2,7 +2,7 @@ import Paciente from '../models/paciente.model'
 
 export const create = async (req, res) => {
   try {
-    const dataPaciente = req.body.dataPaciente
+    const dataPaciente = req.body
     console.log(dataPaciente)
     const paciente = await Paciente.CriarPaciente(dataPaciente)
     res.status(200).json(paciente);

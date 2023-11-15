@@ -1,6 +1,6 @@
 import ConsultaPaciente from "../models/pacienteConsulta.model.js";
 
-export const createNewConsulta = async (req, res) => {
+export const CriarNovaConsultaPaciente = async (req, res) => {
     try {
         const idPaciente = Number(req.params.id)
         const data = req.body
@@ -11,7 +11,7 @@ export const createNewConsulta = async (req, res) => {
         res.status(400).json({ message: `${e}` })
     }
 }
-export const getPacienteConsultas = async (req, res) => {
+export const ListarTodasConsultasPaciente = async (req, res) => {
     try {
         const { id } = req.params
         const consultas = await ConsultaPaciente.getAllConsultasPaciente(Number(id));

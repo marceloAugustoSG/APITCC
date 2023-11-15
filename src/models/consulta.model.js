@@ -27,12 +27,16 @@ class Consulta {
         servico: true,
         profissionalId: true,
         data_solicitacao: true,
+        pacienteId: true,
         Paciente: {
           select: {
             id: true,
             nome: true,
             tipo: true,
-            matricula: true
+            matricula: true,
+            dataNascimento: true,
+            telefone: true,
+            usuarioId: true
           }
         },
         Profissional: {

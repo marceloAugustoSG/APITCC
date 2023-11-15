@@ -7,7 +7,6 @@ const consultaRoutes = app => {
     app.put("/consulta/:id", update)
     app.delete("/consulta/:id", excluir)
     app.delete("/consultas", excluirTodasAsConsultas)
-
 }
 
 export default consultaRoutes

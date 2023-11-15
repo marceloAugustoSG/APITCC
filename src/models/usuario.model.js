@@ -1,39 +1,50 @@
 import { prisma } from "../services/prisma.js";
 
 class Usuario {
+
   async CriarUsuario(data) {
+    const usuario = await prisma.usuario.create({
+      data: {
+        email: data.email,
+        password: data.password,
+        regra: data.regra
+      }
+      , select: {
+        email: true,
+        password: false,
+        regra: true,
+
+      }
+    })
+
+    return usuario
+
+  }
+
+
+  async CriarUsuarioPaciente(data) {
     console.log(data)
     const usuario = await prisma.usuario.create({
       data: {
         email: data.email,
         password: data.password,
         regra: data.regra,
-        notificacoes: data.notificacoes,
-        Paciente: {
+        paciente: {
           create: {
-            nome: data.Paciente.nome,
-            tipo: data.Paciente.tipo,
-            matricula: data.Paciente.matricula,
-            dataNascimento: data.Paciente.dataNascimento,
-          },
-        },
-      },
-      select: {
-        id: true,
-        email: true,
-        password: false,
-        regra: true,
-        Paciente: {
-          select: {
-            id: true,
-            nome: true,
-            tipo: true,
-            matricula: true,
-            consultas: true,
-            dataNascimento: true,
+            nome: data.paciente.nome,
+            tipo: data.paciente.tipo,
+            matricula: data.paciente.matricula,
+            dataNascimento: data.paciente.dataNascimento,
+            telefone: data.paciente.telefone
           }
         }
       },
+      select: {
+        email: true,
+        password: false,
+        regra: true,
+        paciente: true
+      }
     });
     return usuario;
   };
@@ -43,9 +54,7 @@ class Usuario {
         id: true,
         email: true,
         regra: true,
-        notificacoes: true,
-        password: false,
-        Paciente: true
+        paciente: true
       }
     })
     return usuarios;
@@ -59,7 +68,7 @@ class Usuario {
         id: true,
         email: true,
         password: false,
-        Paciente: true
+        paciente: true
       },
     });
     return usuario;
@@ -75,7 +84,8 @@ class Usuario {
         id: true,
         email: true,
         password: true,
-        Paciente: false,
+        regra: true,
+        paciente: false,
       },
     });
     return usuario;
@@ -88,12 +98,12 @@ class Usuario {
       where: {
         id: idUsuario
       }, select: {
-        Paciente: true
+        paciente: true
       }
     })
 
     // se o usuario nao conter o paciente, ele é excluido
-    if (usuario.Paciente === null) {
+    if (usuario.paciente === null) {
       await prisma.usuario.delete({
         where: {
           id: idUsuario

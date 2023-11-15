@@ -1,16 +1,4 @@
-import {
-  AtualizarProfissional,
-  BuscarProfissionalId,
-  CriarProfissional,
-  ExcluirProfissional,
-  ListarTodosProfissionais,
-  createProfissional,
-  deletarProfissional,
-  getAll,
-  getById,
-  updateProfissional,
-
-} from "../models/profissional.model.js";
+import { AtualizarProfissional, BuscarProfissionalId, CriarProfissional, ExcluirProfissional, ListarTodosProfissionais } from "../models/profissional.model.js";
 
 export const create = async (req, res) => {
   try {

@@ -1,18 +1,12 @@
-import { prisma } from "../services/prisma";
+import { format } from "date-fns";
+import { utcToZonedTime } from 'date-fns-tz';
+import { format } from 'date-fns';
 
-const consultas = await prisma.consulta.findMany();
+export const formatDate = (date) => {
+  const brasiliaTimeZone = 'America/Sao_Paulo';
+  // Obtenha a data atual no fuso horário de Brasília
+  const dataAtual = new Date();
+  const brasiliaDate = utcToZonedTime(dataAtual, brasiliaTimeZone);
+  return format(brasiliaDate, "yyyy-MM-dd'T'HH:mm:ssXXX") // Formate a data
+}
 
-const datasConsultasFormatadas = consultas.map((consulta) => {
-  const dataFormatada = consulta.data.toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-
-  return {
-    ...consulta,
-    dataFormatada,
-  };
-});
-
-console.log(datasConsultasFormatadas);
