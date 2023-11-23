@@ -68,7 +68,18 @@ class Usuario {
         id: true,
         email: true,
         password: false,
-        paciente: true
+        paciente: {
+          select:{
+            id:true,
+            nome:true,
+            tipo:true,
+            matricula:true,
+            telefone:true,
+            dataNascimento:true,
+            notificacoes:true,
+            consultas:true,
+          }
+        }
       },
     });
     return usuario;

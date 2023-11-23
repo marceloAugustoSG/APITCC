@@ -17,12 +17,12 @@ export const ListarTodasConsultasPaciente = async (req, res) => {
         const consultas = await ConsultaPaciente.getAllConsultasPaciente(Number(id));
 
         if (consultas.consultas.length === 0) {
-            res.status(200).json({ "message": `O usuario ${consultas.nome} não possui nenhuma consulta agendada` })
+            res.status(200).json({ "message": `O Paciente ${consultas.nome} não possui nenhuma consulta agendada` })
         } else {
             res.status(200).json({ consultas })
         }
     } catch (e) {
-        res.status(404).json({ message: `Usuario não encontrado` })
+        res.status(404).json({ message: `Paciente não encontrado` })
     }
 }
 export const atualizarConsultaPaciente = async (req, res) => {

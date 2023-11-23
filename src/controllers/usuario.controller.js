@@ -99,6 +99,7 @@ export const get = async (req, res) => {
 export const getId = async (req, res) => {
   try {
     const usuario = await Usuario.BuscarUsuarioId(Number(req.params.id));
+    console.error("Usuario:" + usuario)
     if (!usuario) {
       res.status(404).json({ message: "Usuario não encontrado" }).send();
     } else {

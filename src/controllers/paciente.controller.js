@@ -23,8 +23,10 @@ export const get = async (req, res) => {
 export const getId = async (req, res) => {
   try {
     const paciente = await Paciente.BuscarPacienteId(Number(req.params.id));
+    console.log("Paciente:" + paciente)
     if (!paciente) {
       res.status(404).json({ message: "Paciente não encontrado" }).send();
+      console.log('teste')
     } else {
       res.status(200).json(paciente);
     }

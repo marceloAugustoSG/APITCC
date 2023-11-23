@@ -5,8 +5,6 @@ const pacienteRoutes = app => {
     app.get("/paciente/:id", getId)
     app.put("/paciente/:id", update)
     app.delete("/paciente/:id", excluir)
-
-
 }
 
 export default pacienteRoutes;

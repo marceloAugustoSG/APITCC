@@ -28,7 +28,6 @@ model Paciente {
   Usuario        Usuario       @relation(fields: [usuarioId], references: [id])
   consultas      Consulta[]
   notificacoes   Notificacao[]
-  respostas      String?
 
   @@map("pacientes")
 }
@@ -44,6 +43,7 @@ model Consulta {
   Paciente         Paciente?     @relation(fields: [pacienteId], references: [id])
   Profissional     Profissional? @relation(fields: [profissionalId], references: [id])
   data_solicitacao DateTime      @default(now())
+  respostas        String?
 
   @@map("consultas")
 }

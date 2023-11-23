@@ -12,7 +12,8 @@ class Consulta {
         servico: true,
         pacienteId: true,
         profissionalId: true,
-        data_solicitacao: true
+        data_solicitacao: true,
+        respostas: true
       },
     });
     return consulta;
@@ -28,6 +29,7 @@ class Consulta {
         profissionalId: true,
         data_solicitacao: true,
         pacienteId: true,
+        respostas: true,
         Paciente: {
           select: {
             id: true,
@@ -71,6 +73,7 @@ class Consulta {
     return consulta;
   };
 
+
   async AtualizarConsulta(id, data) {
     const consulta = await prisma.consulta.update({
       where: {
@@ -78,11 +81,28 @@ class Consulta {
       },
       data,
       select: {
-        id: true,
+        Paciente: {
+          select: {
+            id: true,
+            nome: true,
+            dataNascimento: true,
+            matricula: true,
+            tipo: true,
+            telefone: true,
+            usuarioId: true
+          },
+        },
+        Profissional: true,
         data: true,
-        status: true,
+        data_solicitacao: true,
+        id: true,
         observacao: true,
-        data_solicitacao: true
+        pacienteId: true,
+        profissionalId: true,
+        respostas: true,
+        servico: true, status: true
+
+
       },
     });
     return consulta;
@@ -102,5 +122,23 @@ class Consulta {
     await prisma.$queryRaw('ALTER SEQUENCE "Consultas_id_seq" RESTART WITH 1');
     return;
   };
+
+  async consultasHoje() {
+
+    try {
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0);
+      const consultasHoje = await prisma.consulta.findMany({
+        where: {
+
+        }
+      })
+    } catch (e) {
+
+
+    }
+
+
+  }
 }
 export default new Consulta();

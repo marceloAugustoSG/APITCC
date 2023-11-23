@@ -62,60 +62,76 @@ export function checkPsi(req, res, next) {
         } else {
             return res.status(403).json({ message: "acesso não autorizado!" })
         }
-
     } catch (error) {
-        console.log(error)
+        console.error(error)
         res.status(400).json({ message: "Token inválido" })
 
     }
 }
 
+import jwt from 'jsonwebtoken';
+
 export function checkPac(req, res, next) {
-    const authHeader = req.headers['authorization']
-
-    const token = authHeader && authHeader.split(" ")[1]
-    if (!token)
-        return res.status(401).json({
-            message: "Acesso negado"
-        })
-
     try {
-        const secret = process.env.SECRET
-        const decoded = jwt.verify(token, secret)
-        console.log(decoded)
+        const authHeader = req.headers['authorization'];
 
-        const regraUsuario = decoded.regra
-
-        if (regraUsuario === 'paciente') {
-            next()
-        } else {
-            return res.status(403).json({ message: "acesso não autorizado!" })
+        if (!authHeader) {
+            return res.status(401).json({
+                message: "Acesso negado. Token ausente."
+            });
         }
 
-    } catch (error) {
-        console.log(error)
-        res.status(400).json({ message: "Token inválido" })
+        const token = authHeader.split(" ")[1];
 
+        if (!token) {
+            return res.status(401).json({
+                message: "Acesso negado. Token ausente ou malformado."
+            });
+        }
+
+        const secret = process.env.SECRET;
+
+        try {
+            const decoded = jwt.verify(token, secret);
+            console.log(decoded);
+
+            if (!decoded || !decoded.regra) {
+                return res.status(401).json({ message: "Token inválido" });
+            }
+
+            const regraUsuario = decoded.regra;
+
+            if (regraUsuario === 'paciente') {
+                next();
+            } else {
+                return res.status(403).json({ message: "Acesso não autorizado!" });
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(401).json({ message: "Token inválido" });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Erro interno do servidor" });
     }
 }
 
 export const logar = async (req, res) => {
-    console.log(req.body)
+    console.log(req.body);
+
     try {
-        const { email, password } = req.body
+        const { email, password } = req.body;
 
-        if (!email) {
-            return res.status(404).json({ message: "Email vazio" })
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email e senha são obrigatórios" });
         }
 
-        if (!password) {
-            return res.status(404).json({ message: "Senha vazia" })
-        }
 
         const usuario = await prisma.usuario.findUnique({
             where: {
                 email
-            }, select: {
+            },
+            select: {
                 id: true,
                 email: true,
                 password: true,
@@ -132,22 +148,26 @@ export const logar = async (req, res) => {
                     }
                 }
             }
-        })
+        });
 
         if (!usuario) {
-            return res.status(404).json({ message: "Usuário não encontrado" })
+            return res.status(404).json({ message: "Email ou senha inválidos" });
         }
-        const checkPassword = await bcrypt.compare(password, usuario.password)
+
+        const checkPassword = await bcrypt.compare(password, usuario.password);
+
         if (!checkPassword) {
-            return res.status(404).json({ message: "Senha inválida" })
+            return res.status(404).json({ message: "Email ou senha inválidos" });
         }
 
-        const regra = usuario.regra
-        const token = gerarToken(usuario.id, regra)
-        return res.status(200).json({ message: "Autenticado com sucesso", token, usuario })
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({ message: "Erro interno do servidor" })
-    }
-}
+        const regra = usuario.regra;
+        const token = gerarToken(usuario.id, regra);
 
+        return res.status(200).json({ message: "Autenticado com sucesso", token, usuario });
+
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Erro interno do servidor" });
+    }
+};

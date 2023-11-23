@@ -62,18 +62,17 @@ export const update = async (req, res) => {
 
 export const excluir = async (req, res) => {
   try {
-    const consulta = await Consulta.ExcluirConsulta(Number(req.params.id));
-
-    if (!consulta) {
+    const consultaIsExist = await Consulta.BuscarConsultaId(Number(req.params.id));
+    if (!consultaIsExist) {
       res.status(404).json({ message: "Essa consulta não existe" })
-
     } else {
-      await Consulta.delete(Number(req.params.id));
-      res.status(200).send();
+      await Consulta.ExcluirConsulta(Number(req.params.id))
+      res.status(200).json({ message: "Consulta Excluida com sucesso!" })
     }
   } catch (e) {
-    res.status(400).json(e.message);
-    console.log(e)
+    console.error(e)
+
+
   }
 };
 
