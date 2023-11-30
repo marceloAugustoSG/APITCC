@@ -63,6 +63,7 @@ class Paciente {
             where: {
                 id,
             }, select: {
+                id: true,
                 nome: true,
                 tipo: true,
                 dataNascimento: true,

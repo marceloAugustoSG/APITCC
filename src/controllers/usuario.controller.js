@@ -72,6 +72,7 @@ export const createUsuarioPaciente = async (req, res) => {
             matricula: req.body.paciente.matricula,
             notificacoes: req.body.paciente.notificacoes,
             dataNascimento: req.body.paciente.dataNascimento,
+            telefone: req.body.paciente.telefone,
           },
         }
         await Usuario.CriarUsuarioPaciente(usuarioCriado)

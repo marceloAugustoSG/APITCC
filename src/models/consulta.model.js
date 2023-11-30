@@ -67,7 +67,8 @@ class Consulta {
         data_solicitacao: true,
         Paciente: true,
         Profissional: true,
-        servico: true
+        servico: true,
+        respostas: true
       },
     });
     return consulta;
@@ -81,27 +82,12 @@ class Consulta {
       },
       data,
       select: {
-        Paciente: {
-          select: {
-            id: true,
-            nome: true,
-            dataNascimento: true,
-            matricula: true,
-            tipo: true,
-            telefone: true,
-            usuarioId: true
-          },
-        },
-        Profissional: true,
         data: true,
         data_solicitacao: true,
         id: true,
         observacao: true,
         pacienteId: true,
-        profissionalId: true,
-        respostas: true,
-        servico: true, status: true
-
+        profissionalId: true
 
       },
     });

@@ -3,6 +3,7 @@ import consultaRoutes from "./consulta.routes.js";
 import consultasPacienteRoutes from "./consultasPaciente.routes.js";
 import profissionalRoutes from "./profissional.routes.js";
 import usuariosRoutes from "./usuarios.routes.js";
+import notificacaoRoutes from "./notificacao.routes.js";
 
 const routes = (app) => {
   pacienteRoutes(app);
@@ -10,6 +11,7 @@ const routes = (app) => {
   consultasPacienteRoutes(app);
   profissionalRoutes(app);
   usuariosRoutes(app);
+  notificacaoRoutes(app)
 };
 
 export default routes;

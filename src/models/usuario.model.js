@@ -13,12 +13,9 @@ class Usuario {
         email: true,
         password: false,
         regra: true,
-
       }
     })
-
     return usuario
-
   }
 
 
