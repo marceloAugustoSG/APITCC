@@ -44,7 +44,7 @@ class Paciente {
     async ListarTodosPacientes() {
         const pacientes = await prisma.paciente.findMany({
             select: {
-                Usuario: false,
+                usuarioId: true,
                 id: true,
                 nome: true,
                 tipo: true,
@@ -52,7 +52,6 @@ class Paciente {
                 consultas: true,
                 dataNascimento: true,
                 notificacoes: true,
-                respostas: true
             }
         })
         return pacientes
