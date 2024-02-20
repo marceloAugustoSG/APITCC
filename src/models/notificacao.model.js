@@ -2,11 +2,11 @@ import { prisma } from "../services/prisma.js";
 
 class Notificacao {
 
-    async criarNotificacao(data) {
+    async criarNotificacao(data, pacienteId) {
         const notificacao = await prisma.notificacao.create({
             data: {
                 mensagem: data.mensagem,
-                pacienteId: data.pacienteId,
+                pacienteId
             }
             , select: {
                 mensagem: true,
@@ -15,6 +15,20 @@ class Notificacao {
         })
         return notificacao
     };
+
+    async BuscarNotificacaoID(id) {
+        const notificacao = await prisma.notificacao.findUnique({
+            where: {
+                id
+            },
+            select: {
+                id: true,
+                mensagem: true
+            }
+        })
+        return notificacao;
+
+    }
 
     async ListarTodasNotificacoes() {
         const notificacoes = await prisma.notificacao.findMany({
@@ -27,17 +41,26 @@ class Notificacao {
         return notificacoes;
     };
 
+    async ListarNotificacoesPaciente(pacienteId) {
+        const notificacoesPaciente = await prisma.notificacao.findMany({
+            where: {
+                pacienteId
+            }, select: {
+                id: true,
+                mensagem: true
+            }
+        })
+        return notificacoesPaciente
+    }
 
-
-    async excluirNotificacao(id) {
+    async excluirNotificacao(idNotificacao) {
         await prisma.notificacao.delete({
             where: {
-                id,
-            },
+                id: idNotificacao
+            }
         });
         return;
-    };
+    }
 }
-
 
 export default new Notificacao();

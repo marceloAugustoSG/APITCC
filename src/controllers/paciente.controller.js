@@ -1,4 +1,4 @@
-import Paciente from '../models/paciente.model'
+import Paciente from '../models/paciente.model.js';
 
 export const create = async (req, res) => {
   try {
@@ -23,6 +23,21 @@ export const get = async (req, res) => {
 export const getId = async (req, res) => {
   try {
     const paciente = await Paciente.BuscarPacienteId(Number(req.params.id));
+    console.log("Paciente:" + paciente)
+    if (!paciente) {
+      res.status(404).json({ message: "Paciente não encontrado" }).send();
+      console.log('teste')
+    } else {
+      res.status(200).json(paciente);
+    }
+  } catch (e) {
+    res.status(400).json(e);
+    console.log(e)
+  }
+};
+export const getUserId = async (req, res) => {
+  try {
+    const paciente = await Paciente.BuscarPacienteIdUsuario(Number(req.params.id));
     console.log("Paciente:" + paciente)
     if (!paciente) {
       res.status(404).json({ message: "Paciente não encontrado" }).send();

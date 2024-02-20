@@ -1,5 +1,5 @@
-import Consulta from '../models/consulta.model'
-import { formatDate } from '../services/Date/Date';
+import Consulta from '../models/consulta.model.js'
+import { formatDate } from '../services/Date/Date.js';
 
 export const create = async (req, res) => {
   try {
@@ -84,3 +84,15 @@ export const excluirTodasAsConsultas = async (req, res) => {
     res.status(400).json(e).json({ error: "erro interno" });
   }
 };
+
+export const consultasPaciente = async (req, res) => {
+  const idPaciente = Number(req.params.id)
+  console.log(idPaciente)
+  try {
+
+    const consultas = await Consulta.consultasPaciente(idPaciente)
+    res.status(200).json({ consultas })
+  } catch (error) {
+    res.status(400).json({ message: `Erro ${error}` })
+  }
+}

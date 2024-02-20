@@ -7,6 +7,7 @@ dotenv.config();
 
 const app = express();
 
+
 app.use(cors());
 
 app.use(express.json());
@@ -15,6 +16,10 @@ routes(app);
 
 const port = 3005
 
-app.listen(port);
+app.get('/', (req, res) => {
+    res.status(200).json({ message: `Bem vindo a API de Agendamentos` })
+})
+app.listen(port)
+
 
 console.log(`Servidor rodando na porta ${port}`);

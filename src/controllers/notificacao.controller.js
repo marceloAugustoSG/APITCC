@@ -1,47 +1,65 @@
 import Notificacao from "../models/notificacao.model.js";
-import { prisma } from "../services/prisma.js";
+import Paciente from '../models/paciente.model.js'
 
 export const createNotificacao = async (req, res) => {
     try {
         const dataNotificacao = req.body
-        const notificacao = await Notificacao.criarNotificacao(dataNotificacao)
-        res.status(200).json(notificacao);
+        const pacienteId = req.params.idPaciente
+
+        const IsPacienteExist = await Paciente.BuscarPacienteId(Number(pacienteId))
+        if (!IsPacienteExist) {
+            res.status(404).json({ message: `Paciente não encontrado` });
+            return;
+        }
+        const notificacao = await Notificacao.criarNotificacao(dataNotificacao, Number(pacienteId))
+        res.status(201).json({ notificacao });
     } catch (e) {
-        res.status(400).json(`teste:${e}`);
+        res.status(400).json({ message: `Erro ao criar notificação` });
     }
 };
 
-export const getNotificacoes = async (req, res) => {
+export const ListarTodasNotificacoes = async (req, res) => {
     try {
         const notificacoes = await Notificacao.ListarTodasNotificacoes();
         if (notificacoes.length === 0) {
-            res
-                .status(200)
-                .json({ message: "Nenhuma notificação" });
-        } else res.status(200).send(notificacoes);
+            res.status(200).json({ message: "Nenhuma notificação" });
+        } else res.status(201).send(notificacoes);
     } catch (e) {
         res.status(400).send(`${e}`);
     }
 };
-export const excluirNotificacao = async (req, res) => {
-    const notificacao = await prisma.notificacao.findUnique({
-        where: {
-            id: Number(req.params.id)
-        }
-    })
+
+
+
+export const listarNotificacaoPaciente = async (req, res) => {
+
+    const idPaciente = Number(req.params.idPaciente)
     try {
-        if (!notificacao) {
-            res.status(400).json({ message: "notificacao não encontrada" }).send();
-
-        } else {
-            await Notificacao.excluirNotificacao(Number(req.params.id));
-            res.status(200).json({ message: "Notificação exluida com sucesso" }).send();
+        const isPacienteExist = await Paciente.BuscarPacienteId(idPaciente)
+        if (!isPacienteExist) {
+            res.status(404).json({ message: `Paciente não encontrado` })
+            return;
         }
-
-    } catch (e) {
-        res.status(400).json(e);
+        const notificacoes = await Notificacao.ListarNotificacoesPaciente(idPaciente)
+        res.status(200).json({ notificacoes })
+    } catch (error) {
     }
 }
+export const excluirNotificacao = async (req, res) => {
+    const idNotificacao = Number(req.params.idNotificacao)
+    try {
+        const isNotificacaoExist = await Notificacao.BuscarNotificacaoID(idNotificacao)
 
+        if (!isNotificacaoExist) {
+            res.status(404).json({ message: `Notificação não encontrada` })
+            return;
+        }
+        await Notificacao.excluirNotificacao(idNotificacao)
+        res.status(200).json({ message: `Notificação excluida` })
+    } catch (error) {
+        res.status(200).json({ Erro: `Erro ${error}` })
+    }
+
+}
 
 

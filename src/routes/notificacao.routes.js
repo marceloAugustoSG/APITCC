@@ -1,13 +1,22 @@
 import {
-    createNotificacao,
-    getNotificacoes,
-    excluirNotificacao
-
+  createNotificacao,
+  ListarTodasNotificacoes,
+  excluirNotificacao,
+  listarNotificacaoPaciente,
 } from "../controllers/notificacao.controller.js";
+
 const notificacaoRoutes = (app) => {
-    app.post("/notificar", createNotificacao)
-    app.get('/notificacoes', getNotificacoes)
-    app.delete("/notificacao/:id", excluirNotificacao);
+  // Notificar um paciente
+  app.post("/paciente/:idPaciente/notificar", createNotificacao);
+
+  // Listar todas as notificações
+  app.get("/notificacoes", ListarTodasNotificacoes);
+
+  // Listar notificações de um paciente específico
+  app.get("/paciente/:idPaciente/notificacoes", listarNotificacaoPaciente);
+
+  // Excluir uma notificação
+  app.delete("/notificacao/:idNotificacao", excluirNotificacao);
 };
 
 export default notificacaoRoutes;

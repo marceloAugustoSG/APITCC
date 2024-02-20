@@ -73,6 +73,23 @@ class Paciente {
         })
         return paciente
     }
+    async BuscarPacienteIdUsuario(id) {
+        const paciente = await prisma.paciente.findUnique({
+            where: {
+                usuarioId: id
+            }, select: {
+                id: true,
+                nome: true,
+                tipo: true,
+                dataNascimento: true,
+                matricula: true,
+                consultas: false,
+                telefone: true,
+                usuarioId: true
+            }
+        })
+        return paciente
+    }
 
     async AtualizarPaciente(id, data) {
 

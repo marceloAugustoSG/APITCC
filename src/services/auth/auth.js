@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { prisma } from "./../../services/prisma"
+import { prisma } from "./../../services/prisma.js"
 import bcrypt from 'bcrypt'
+
 
 export function gerarToken(usuarioId, regra) {
     const payload = {
@@ -69,24 +70,25 @@ export function checkPsi(req, res, next) {
     }
 }
 
-import jwt from 'jsonwebtoken';
 
 export function checkPac(req, res, next) {
     try {
         const authHeader = req.headers['authorization'];
 
         if (!authHeader) {
-            return res.status(401).json({
+            res.status(401).json({
                 message: "Acesso negado. Token ausente."
             });
+            return;
         }
 
         const token = authHeader.split(" ")[1];
 
         if (!token) {
-            return res.status(401).json({
+            res.status(401).json({
                 message: "Acesso negado. Token ausente ou malformado."
             });
+            return;
         }
 
         const secret = process.env.SECRET;
@@ -96,7 +98,8 @@ export function checkPac(req, res, next) {
             console.log(decoded);
 
             if (!decoded || !decoded.regra) {
-                return res.status(401).json({ message: "Token inválido" });
+                res.status(401).json({ message: "Token inválido" });
+                return;
             }
 
             const regraUsuario = decoded.regra;
@@ -104,29 +107,29 @@ export function checkPac(req, res, next) {
             if (regraUsuario === 'paciente') {
                 next();
             } else {
-                return res.status(403).json({ message: "Acesso não autorizado!" });
+                res.status(403).json({ message: "Acesso não autorizado!" });
+                return
             }
         } catch (error) {
             console.error(error);
-            return res.status(401).json({ message: "Token inválido" });
+            res.status(401).json({ message: "Token inválido" });
+            return
         }
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: "Erro interno do servidor" });
+        res.status(500).json({ message: "Erro interno do servidor" });
+        return
     }
 }
 
 export const logar = async (req, res) => {
     console.log(req.body);
-
     try {
         const { email, password } = req.body;
 
         if (!email || !password) {
             return res.status(400).json({ message: "Email e senha são obrigatórios" });
         }
-
-
         const usuario = await prisma.usuario.findUnique({
             where: {
                 email
@@ -151,23 +154,27 @@ export const logar = async (req, res) => {
         });
 
         if (!usuario) {
-            return res.status(404).json({ message: "Email ou senha inválidos" });
+            res.status(404).json({ message: "Email ou senha inválidos" });
+            return;
+
         }
 
         const checkPassword = await bcrypt.compare(password, usuario.password);
 
         if (!checkPassword) {
-            return res.status(404).json({ message: "Email ou senha inválidos" });
+            res.status(404).json({ message: "Email ou senha inválidos" });
+            return;
         }
 
         const regra = usuario.regra;
         const token = gerarToken(usuario.id, regra);
 
-        return res.status(200).json({ message: "Autenticado com sucesso", token, usuario });
-
-
+        res.status(200).json({ token });
+        return;
+        // return res.status(200).json({ message: "Autenticado com sucesso", token, usuario });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: "Erro interno do servidor" });
+        res.status(500).json({ message: "Erro interno do servidor" });
+        return;
     }
 };

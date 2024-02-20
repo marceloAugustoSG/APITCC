@@ -1,6 +1,5 @@
 import { format } from "date-fns";
 import { utcToZonedTime } from 'date-fns-tz';
-import { format } from 'date-fns';
 
 export const formatDate = (date) => {
   const brasiliaTimeZone = 'America/Sao_Paulo';

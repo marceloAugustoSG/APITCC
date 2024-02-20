@@ -66,15 +66,15 @@ class Usuario {
         email: true,
         password: false,
         paciente: {
-          select:{
-            id:true,
-            nome:true,
-            tipo:true,
-            matricula:true,
-            telefone:true,
-            dataNascimento:true,
-            notificacoes:true,
-            consultas:true,
+          select: {
+            id: true,
+            nome: true,
+            tipo: true,
+            matricula: true,
+            telefone: true,
+            dataNascimento: true,
+            notificacoes: true,
+            consultas: true,
           }
         }
       },

@@ -109,22 +109,41 @@ class Consulta {
     return;
   };
 
-  async consultasHoje() {
-
-    try {
-      const hoje = new Date();
-      hoje.setHours(0, 0, 0, 0);
-      const consultasHoje = await prisma.consulta.findMany({
-        where: {
-
-        }
-      })
-    } catch (e) {
-
-
-    }
+  async consultasPaciente(idPaciente) {
+    const consultas = await prisma.consulta.findMany({
+      where: {
+        pacienteId: idPaciente
+      },
+      select: {
+        data_solicitacao: true,
+        status: true,
+        observacao: true,
+        pacienteId: true,
+        servico: true
+      }
+    })
+    console.log(consultas)
+    return consultas
 
 
   }
+
+  // async consultasHoje() {
+
+  //   try {
+  //     const hoje = new Date();
+  //     hoje.setHours(0, 0, 0, 0);
+  //     const consultasHoje = await prisma.consulta.findMany({
+  //       where: {
+
+  //       }
+  //     })
+  //   } catch (e) {
+
+
+  //   }
+
+
+  // }
 }
 export default new Consulta();
