@@ -13,11 +13,11 @@ class Consulta {
         pacienteId: true,
         profissionalId: true,
         data_solicitacao: true,
-        respostas: true
+        respostas: true,
       },
     });
     return consulta;
-  };
+  }
   async ListarTodasConsultas() {
     const consultas = await prisma.consulta.findMany({
       select: {
@@ -38,19 +38,19 @@ class Consulta {
             matricula: true,
             dataNascimento: true,
             telefone: true,
-            usuarioId: true
-          }
+            usuarioId: true,
+          },
         },
         Profissional: {
           select: {
             id: true,
             nome: true,
-          }
-        }
+          },
+        },
       },
     });
     return consultas;
-  };
+  }
 
   async BuscarConsultaId(id) {
     const consulta = await prisma.consulta.findUnique({
@@ -68,12 +68,11 @@ class Consulta {
         Paciente: true,
         Profissional: true,
         servico: true,
-        respostas: true
+        respostas: true,
       },
     });
     return consulta;
-  };
-
+  }
 
   async AtualizarConsulta(id, data) {
     const consulta = await prisma.consulta.update({
@@ -87,12 +86,11 @@ class Consulta {
         id: true,
         observacao: true,
         pacienteId: true,
-        profissionalId: true
-
+        profissionalId: true,
       },
     });
     return consulta;
-  };
+  }
 
   async ExcluirConsulta(id) {
     await prisma.consulta.delete({
@@ -101,31 +99,30 @@ class Consulta {
       },
     });
     return;
-  };
+  }
 
   async deleteAll() {
     await prisma.consulta.deleteMany();
     await prisma.$queryRaw('ALTER SEQUENCE "Consultas_id_seq" RESTART WITH 1');
     return;
-  };
+  }
 
   async consultasPaciente(idPaciente) {
     const consultas = await prisma.consulta.findMany({
       where: {
-        pacienteId: idPaciente
+        pacienteId: idPaciente,
       },
       select: {
         data_solicitacao: true,
         status: true,
         observacao: true,
         pacienteId: true,
-        servico: true
-      }
-    })
-    console.log(consultas)
-    return consultas
-
-
+        servico: true,
+        data: true,
+      },
+    });
+    console.log(consultas);
+    return consultas;
   }
 
   // async consultasHoje() {
@@ -140,9 +137,7 @@ class Consulta {
   //     })
   //   } catch (e) {
 
-
   //   }
-
 
   // }
 }

@@ -1,12 +1,13 @@
-import Consulta from '../models/consulta.model.js'
-import { formatDate } from '../services/Date/Date.js';
+import Consulta from "../models/consulta.model.js";
+import { ConsultasPagination } from "../pagination/ConsultasPagination.js";
+import { formatDate } from "../services/Date/Date.js";
 
 export const create = async (req, res) => {
   try {
-    const dataConsulta = req.body
+    const dataConsulta = req.body;
     const consulta = await Consulta.CriarConsulta(dataConsulta);
-    const dataFormatada = formatDate(consulta.data_solicitacao)
-    consulta.data_solicitacao = formatDate(dataFormatada)
+    const dataFormatada = formatDate(consulta.data_solicitacao);
+    consulta.data_solicitacao = formatDate(dataFormatada);
     res.status(200).json(consulta);
   } catch (e) {
     console.log(`${e}`);
@@ -21,14 +22,12 @@ export const getId = async (req, res) => {
     } else {
       res.status(200).json(consulta);
     }
-
   } catch (e) {
     res.status(400).send(e);
   }
 };
 
 export const get = async (req, res) => {
-
   try {
     const consultas = await Consulta.ListarTodasConsultas();
     if (consultas.length === 0) {
@@ -37,6 +36,8 @@ export const get = async (req, res) => {
         .json({ message: "Nenhuma consulta foi feita no sistema" });
     } else {
       res.status(200).json(consultas);
+      const teste = await ConsultasPagination();
+      console.log(teste);
     }
   } catch (e) {
     res.status(400).json(e);
@@ -49,30 +50,30 @@ export const update = async (req, res) => {
   try {
     const consultaIsExist = await Consulta.BuscarConsultaId(Number(id));
     if (!consultaIsExist) {
-      res.status(404).json({ message: "Essa consulta não existe" })
+      res.status(404).json({ message: "Essa consulta não existe" });
     } else {
       const consulta = await Consulta.AtualizarConsulta(Number(id), data);
       res.status(200).json(consulta);
     }
   } catch (e) {
-    console.log(`${e}`)
+    console.log(`${e}`);
     res.status(400).json(e);
   }
 };
 
 export const excluir = async (req, res) => {
   try {
-    const consultaIsExist = await Consulta.BuscarConsultaId(Number(req.params.id));
+    const consultaIsExist = await Consulta.BuscarConsultaId(
+      Number(req.params.id)
+    );
     if (!consultaIsExist) {
-      res.status(404).json({ message: "Essa consulta não existe" })
+      res.status(404).json({ message: "Essa consulta não existe" });
     } else {
-      await Consulta.ExcluirConsulta(Number(req.params.id))
-      res.status(200).json({ message: "Consulta Excluida com sucesso!" })
+      await Consulta.ExcluirConsulta(Number(req.params.id));
+      res.status(200).json({ message: "Consulta Excluida com sucesso!" });
     }
   } catch (e) {
-    console.error(e)
-
-
+    console.error(e);
   }
 };
 
@@ -86,13 +87,12 @@ export const excluirTodasAsConsultas = async (req, res) => {
 };
 
 export const consultasPaciente = async (req, res) => {
-  const idPaciente = Number(req.params.id)
-  console.log(idPaciente)
+  const idPaciente = Number(req.params.id);
+  console.log(idPaciente);
   try {
-
-    const consultas = await Consulta.consultasPaciente(idPaciente)
-    res.status(200).json({ consultas })
+    const consultas = await Consulta.consultasPaciente(idPaciente);
+    res.status(200).json({ consultas });
   } catch (error) {
-    res.status(400).json({ message: `Erro ${error}` })
+    res.status(400).json({ message: `Erro ${error}` });
   }
-}
+};

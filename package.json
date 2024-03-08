@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "start": "nodemon src/server.js --host 0.0.0.0 --port 3000"
+    "start": "nodemon src/server.js --host 0.0.0.0 --port 3005"
   },
   "keywords": [],
   "author": "",

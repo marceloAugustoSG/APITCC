@@ -1,3 +1,4 @@
+import { logar } from "../services/auth/auth.js";
 import {
   createUsuario,
   createUsuarioPaciente,
@@ -6,9 +7,8 @@ import {
   update,
   excluir,
 } from "../controllers/usuario.controller.js";
-import { logar } from "../services/auth/auth.js";
 const usuariosRoutes = (app) => {
-  app.post("/login", logar)
+  app.post("/login", logar);
   app.post("/usuario", createUsuario);
   app.post("/usuarioPaciente", createUsuarioPaciente);
   app.get("/usuarios", get);
