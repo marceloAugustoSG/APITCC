@@ -1,4 +1,4 @@
 
 yarn prisma generate
 
-yarn prisma migrate deploy
+npx prisma migrate deploy
