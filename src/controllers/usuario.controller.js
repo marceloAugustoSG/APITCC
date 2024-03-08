@@ -1,7 +1,6 @@
 import Usuario from "../models/usuario.model.js";
 import { prisma } from "../services/prisma.js";
 import bcrypt from "bcrypt";
-import userValidation from "../validations";
 export const createUsuario = async (req, res) => {
   const { email, password } = req.body;
 
