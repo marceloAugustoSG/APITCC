@@ -1,11 +1,12 @@
 import Usuario from "../models/usuario.model.js";
 import { prisma } from "../services/prisma.js";
 import bcrypt from "bcrypt";
-
+import userValidation from "../validations";
 export const createUsuario = async (req, res) => {
   const { email, password } = req.body;
 
   const user = await prisma.usuario.findUnique({
+    
     where: {
       email,
     },
@@ -16,7 +17,7 @@ export const createUsuario = async (req, res) => {
       .json({ message: "Email e senha são obrigatórios inválido" });
     return;
   }
- 
+
   if (user) {
     res.status(409).json({ message: "usuário ja existe" });
     return;
