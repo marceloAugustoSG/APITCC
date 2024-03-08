@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "start": "nodemon src/server.js",
-    "vercel-build": "npx prisma migrate deploy && yarn prisma generate "
+    "start": "nodemon src/server.js"
+ 
   },
   "keywords": [],
   "author": "",
