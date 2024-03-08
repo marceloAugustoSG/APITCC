@@ -6,8 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "start": "nodemon src/server.js"
- 
+    "start": "nodemon src/server.js",
+    "vercel-build": "prisma generate && prisma migrate deploy",
+    "prisma:generate": "prisma generate"
   },
   "keywords": [],
   "author": "",
