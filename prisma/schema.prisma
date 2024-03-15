@@ -33,22 +33,22 @@ model Paciente {
 }
 
 model Consulta {
-  id               Int           @id @default(autoincrement())
+  id               Int                @id @default(autoincrement())
   data             DateTime?
   status           String
   observacao       String
   servico          String?
   pacienteId       Int?
   profissionalId   Int?
-  Paciente         Paciente?     @relation(fields: [pacienteId], references: [id])
-  Profissional     Profissional? @relation(fields: [profissionalId], references: [id])
-  data_solicitacao DateTime      @default(now())
+  Paciente         Paciente?          @relation(fields: [pacienteId], references: [id])
+  Profissional     ProfissionalSaude? @relation(fields: [profissionalId], references: [id])
+  data_solicitacao DateTime           @default(now())
   respostas        String?
 
   @@map("consultas")
 }
 
-model Profissional {
+model ProfissionalSaude {
   id            Int        @id @default(autoincrement())
   nome          String
   especialidade String

@@ -2,44 +2,43 @@ import { prisma } from '../services/prisma.js'
 
 class Paciente {
 
-    async CriarPaciente(data) {
-        console.log(data)
-        try {
-            const paciente = await prisma.paciente.create({
-                data: {
-                    nome: data.nome,
-                    tipo: data.tipo,
-                    matricula: data.matricula,
-                    dataNascimento: data.dataNascimento,
-                    telefone: data.telefone,
-                    Usuario: {
-                        connect: { id: data.usuarioId },
-                    },
-                },
-                select: {
-                    id: true,
-                    nome: true,
-                    tipo: true,
-                    matricula: true,
-                    telefone: true,
-                    Usuario: {
-                        select: {
-                            id: true,
-                            email: true,
-                            password: true,
-                        },
-                    },
-                    usuarioId: true,
+    // async CriarPaciente(data) {
+    //     console.log(data)
+    //     try {
+    //         const paciente = await prisma.paciente.create({
+    //             data: {
+    //                 nome: data.nome,
+    //                 tipo: data.tipo,
+    //                 matricula: data.matricula,
+    //                 dataNascimento: data.dataNascimento,
+    //                 telefone: data.telefone,
+    //                 Usuario: {
+    //                     connect: { id: data.usuarioId },
+    //                 },
+    //             },
+    //             select: {
+    //                 id: true,
+    //                 nome: true,
+    //                 tipo: true,
+    //                 matricula: true,
+    //                 telefone: true,
+    //                 Usuario: {
+    //                     select: {
+    //                         id: true,
+    //                         email: true,
+    //                         password: true,
+    //                     },
+    //                 },
+    //                 usuarioId: true,
+    //             },
+    //         });
 
-                },
-            });
-
-            return paciente;
-        } catch (error) {
-            console.error("Erro ao criar paciente:", error);
-            throw error;
-        }
-    }
+    //         return paciente;
+    //     } catch (error) {
+    //         console.error("Erro ao criar paciente:", error);
+    //         throw error;
+    //     }
+    // }
 
     async ListarTodosPacientes() {
         const pacientes = await prisma.paciente.findMany({

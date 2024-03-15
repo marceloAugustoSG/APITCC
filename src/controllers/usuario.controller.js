@@ -5,7 +5,6 @@ export const createUsuario = async (req, res) => {
   const { email, password } = req.body;
 
   const user = await prisma.usuario.findUnique({
-    
     where: {
       email,
     },
@@ -50,12 +49,15 @@ export const createUsuarioPaciente = async (req, res) => {
 
     if (!email) {
       res.status(400).json({ message: "Email inválido" });
+      return;
     }
     if (!password) {
       res.status(400).json({ message: "Senha inválida" });
+      return;
     }
     if (user) {
       res.status(409).json({ message: "usuário com esse email ja existe" });
+      return;
     } else {
       const hashPassword = await bcrypt.hash(password, 10);
       try {

@@ -52,6 +52,24 @@ class Consulta {
     return consultas;
   }
 
+  async compareConsulta(id) {
+    const consulta = await prisma.consulta.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        status: true,
+        data: true,
+        data_solicitacao: true,
+        id: true,
+        observacao: true,
+        pacienteId: true,
+        profissionalId: true,
+      },
+    });
+    return consulta;
+  }
+
   async BuscarConsultaId(id) {
     const consulta = await prisma.consulta.findUnique({
       where: {
@@ -81,6 +99,7 @@ class Consulta {
       },
       data,
       select: {
+        status: true,
         data: true,
         data_solicitacao: true,
         id: true,
@@ -124,21 +143,5 @@ class Consulta {
     console.log(consultas);
     return consultas;
   }
-
-  // async consultasHoje() {
-
-  //   try {
-  //     const hoje = new Date();
-  //     hoje.setHours(0, 0, 0, 0);
-  //     const consultasHoje = await prisma.consulta.findMany({
-  //       where: {
-
-  //       }
-  //     })
-  //   } catch (e) {
-
-  //   }
-
-  // }
 }
 export default new Consulta();

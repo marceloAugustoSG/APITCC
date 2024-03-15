@@ -20,7 +20,6 @@ class Usuario {
 
 
   async CriarUsuarioPaciente(data) {
-    console.log(data)
     const usuario = await prisma.usuario.create({
       data: {
         email: data.email,
@@ -100,7 +99,6 @@ class Usuario {
   };
 
   async ExcluirUsuario(idUsuario) {
-
     //Encontrando o usuario
     const usuario = await prisma.usuario.findUnique({
       where: {
@@ -109,7 +107,6 @@ class Usuario {
         paciente: true
       }
     })
-
     // se o usuario nao conter o paciente, ele é excluido
     if (usuario.paciente === null) {
       await prisma.usuario.delete({

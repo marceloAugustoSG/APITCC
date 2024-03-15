@@ -1,6 +1,7 @@
 import Consulta from "../models/consulta.model.js";
 import { ConsultasPagination } from "../pagination/ConsultasPagination.js";
 import { formatDate } from "../services/Date/Date.js";
+import { schema } from "../validations/consulta.validation.js";
 
 export const create = async (req, res) => {
   try {
@@ -11,7 +12,7 @@ export const create = async (req, res) => {
     res.status(200).json(consulta);
   } catch (e) {
     console.log(`${e}`);
-    res.status(400).json({ message: "Erro ao criar uma consulta", error: e });
+    res.status(400).json({ message: "Erro ao criar uma consulta", e });
   }
 };
 export const getId = async (req, res) => {
@@ -48,13 +49,21 @@ export const update = async (req, res) => {
   const id = req.params.id;
   const data = req.body;
   try {
-    const consultaIsExist = await Consulta.BuscarConsultaId(Number(id));
+    schema.parse(data);
+    const consultaIsExist = await Consulta.compareConsulta(Number(id));
     if (!consultaIsExist) {
       res.status(404).json({ message: "Essa consulta não existe" });
-    } else {
-      const consulta = await Consulta.AtualizarConsulta(Number(id), data);
-      res.status(200).json(consulta);
+      return;
     }
+    // Comparar os dados recebidos com os dados existentes
+    if (JSON.stringify(data) === JSON.stringify(consultaIsExist)) {
+      res.status(304).json({ message: "Não houve alterações" });
+      return;
+    }
+
+    // Atualizar os dados se houver alterações
+    await Consulta.AtualizarConsulta(Number(id), data);
+    res.status(200).json({ message: "Consulta atualizada" });
   } catch (e) {
     console.log(`${e}`);
     res.status(400).json(e);

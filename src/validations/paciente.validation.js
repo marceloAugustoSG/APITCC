@@ -1,6 +1,11 @@
-import * as yup from 'yup'
+import { z } from "zod";
 
-export const userValidation = yup.object({
-    email: yup.string().required().email(),
-    password: yup.string().required().min(6)
-})
+export const schemaPaciente = z.object({
+  nome: z.string(),
+  tipo: z.string(),
+  matricula: z.string().min(8),
+  dataNascimento: z
+    .string({ required_error: "Campo data requerido" })
+    .datetime({ message: "insira uma data válida" }),
+  telefone: z.string(),
+});
