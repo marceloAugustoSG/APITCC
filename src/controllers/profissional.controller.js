@@ -1,13 +1,30 @@
 import Profissional from "../models/profissional.model.js";
+import { schemaProfissional } from "../validations/profissionalSaude.js";
 
 export const create = async (req, res) => {
   try {
+    // Verifica se o email já existe no banco de dados
+    const { email } = req.body;
+    const existingProfissional = await Profissional.BuscarProfissionalEmail(
+      email
+    );
+    if (existingProfissional) {
+      return res
+        .status(400)
+        .json({ Erro: "Já existe um profissional com este email." });
+    }
+
+    // Se o email não existir, continua com a criação do profissional
+    schemaProfissional.parse(req.body);
     const profissional = await Profissional.CriarProfissional(req.body);
 
     res.status(200).json(profissional);
   } catch (e) {
-    res.status(400).json(e);
-    res.json({ Erro: "Erro ao criar um profissional" });
+    console.error(e);
+
+    res
+      .status(400)
+      .json({ Erro: "Erro ao criar um profissional", detalhes: e });
   }
 };
 
@@ -26,7 +43,9 @@ export const get = async (req, res) => {
 
 export const getId = async (req, res) => {
   try {
-    const profisional = await Profissional.BuscarProfissionalId(Number(req.params.id));
+    const profisional = await Profissional.BuscarProfissionalId(
+      Number(req.params.id)
+    );
     if (!profisional) {
       res.status(400).json({ message: "profissional não encontrado" }).send();
     } else {
@@ -39,6 +58,7 @@ export const getId = async (req, res) => {
 
 export const update = async (req, res) => {
   try {
+    schemaProfissional.parse(req.body);
     const profissional = await Profissional.AtualizarProfissional(
       Number(req.params.id),
       req.body
@@ -51,16 +71,15 @@ export const update = async (req, res) => {
 
 export const excluir = async (req, res) => {
   try {
-
-    const profisional = await Profissional.BuscarProfissionalId(Number(req.params.id));
+    const profisional = await Profissional.BuscarProfissionalId(
+      Number(req.params.id)
+    );
     if (!profisional) {
-      res.status(400).json({ message: "profissional não encontrado" })
+      res.status(400).json({ message: "profissional não encontrado" });
     } else {
-      await ExcluirProfissional(Number(req.params.id));
+      await Profissional.ExcluirProfissional(Number(req.params.id));
 
-      res
-        .status(200)
-        .json({ message: "Profissional excluido com sucesso" })
+      res.status(200).json({ message: "Profissional excluido com sucesso" });
     }
   } catch (e) {
     res.status(400).json(e);

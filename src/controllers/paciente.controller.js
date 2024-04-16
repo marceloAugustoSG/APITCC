@@ -46,7 +46,7 @@ export const getUserId = async (req, res) => {
     );
     console.log("Paciente:" + paciente);
     if (!paciente) {
-      res.status(404).json({ message: "Paciente não encontrado" }).send();
+      res.status(404).json({ message: "Paciente não encontrado" });
       console.log("teste");
     } else {
       res.status(200).json(paciente);
@@ -58,16 +58,29 @@ export const getUserId = async (req, res) => {
 };
 
 export const update = async (req, res) => {
+  const id = req.params.id;
+  const data = req.body;
+  console.log("Dados do paciente");
+  console.log(data);
   try {
-    const paciente = await Paciente.AtualizarPaciente(
-      Number(req.params.id),
-      req.body
-    );
-    if (!paciente) {
-      res.status(401).json({ message: "Paciente não encontrado" });
+    const pacienteIsExist = await Paciente.comparePaciente(Number(id));
+    console.log("Paciente existe: ");
+    console.log(pacienteIsExist);
+    if (!pacienteIsExist) {
+      res.status(404).json({ message: "Paciente não encontrado" });
+      return;
     }
-    res.status(200).json(paciente);
+    // Comparar os dados recebidos com os dados existentes
+    if (JSON.stringify(data) === JSON.stringify(pacienteIsExist)) {
+      res.status(304).json({ message: "Não houve alterações" });
+      return;
+    }
+
+    // Atualizar os dados se houver alterações
+    await Paciente.AtualizarPaciente(Number(id), data);
+    res.status(200).json({ message: "Paciente atualizado" });
   } catch (e) {
+    console.log(`${e}`);
     res.status(400).json(e);
   }
 };

@@ -1,5 +1,4 @@
 import Consulta from "../models/consulta.model.js";
-import { ConsultasPagination } from "../pagination/ConsultasPagination.js";
 import { formatDate } from "../services/Date/Date.js";
 import { schema } from "../validations/consulta.validation.js";
 
@@ -11,7 +10,7 @@ export const create = async (req, res) => {
     consulta.data_solicitacao = formatDate(dataFormatada);
     res.status(200).json(consulta);
   } catch (e) {
-    console.log(`${e}`);
+    console.log(e);
     res.status(400).json({ message: "Erro ao criar uma consulta", e });
   }
 };
@@ -32,13 +31,12 @@ export const get = async (req, res) => {
   try {
     const consultas = await Consulta.ListarTodasConsultas();
     if (consultas.length === 0) {
-      res
-        .status(200)
-        .json({ message: "Nenhuma consulta foi feita no sistema" });
+      res.status(200).json({
+        message: "Nenhuma consulta foi feita no sistema",
+        totalConsultas: consultas.length,
+      });
     } else {
       res.status(200).json(consultas);
-      const teste = await ConsultasPagination();
-      console.log(teste);
     }
   } catch (e) {
     res.status(400).json(e);

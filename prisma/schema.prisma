@@ -53,6 +53,8 @@ model ProfissionalSaude {
   nome          String
   especialidade String
   consultas     Consulta[]
+  email         String     @unique
+  telefone      String?
 
   @@map("profissionais")
 }
