@@ -5,4 +5,7 @@ export const schema = z.object({
   data: z
     .string({ required_error: "Campo data requerido" })
     .datetime({ message: "insira uma data válida" }),
+  profissionalId: z.number({
+    required_error: "Campo de id do profissional requerido",
+  }),
 });

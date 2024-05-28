@@ -30,14 +30,15 @@ export const getId = async (req, res) => {
 export const get = async (req, res) => {
   try {
     const consultas = await Consulta.ListarTodasConsultas();
-    if (consultas.length === 0) {
-      res.status(200).json({
-        message: "Nenhuma consulta foi feita no sistema",
-        totalConsultas: consultas.length,
-      });
-    } else {
-      res.status(200).json(consultas);
-    }
+    res.status(200).json({ consultas });
+    // if (consultas.length === 0) {
+    //   res.status(200).json({
+    //     message: "Nenhuma consulta foi feita no sistema",
+    //     totalConsultas: consultas.length,
+    //   });
+    // } else {
+    //   res.status(200).json(consultas);
+    // }
   } catch (e) {
     res.status(400).json(e);
   }
@@ -46,6 +47,7 @@ export const get = async (req, res) => {
 export const update = async (req, res) => {
   const id = req.params.id;
   const data = req.body;
+  console.log(data);
   try {
     schema.parse(data);
     const consultaIsExist = await Consulta.compareConsulta(Number(id));

@@ -22,6 +22,7 @@ export function checkAdm(req, res, next) {
     return res.status(401).json({
       message: "Acesso negado",
     });
+    
   try {
     const secret = process.env.SECRET;
     const decoded = jwt.verify(token, secret);

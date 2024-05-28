@@ -18,7 +18,7 @@ const consultaRoutes = (app) => {
   app.post("/consulta", create);
 
   // Listar todas as consultas
-  app.get("/consultas", get);
+  app.get("/consultas", checkAdm, get);
 
   // Listar consultas de um paciente específico (com autenticação)
   app.get("/paciente/:id/consultas", checkPac, consultasPaciente);

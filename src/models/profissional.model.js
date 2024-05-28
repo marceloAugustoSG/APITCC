@@ -65,6 +65,22 @@ class Profissional {
     return profissional;
   }
 
+  async compareProfissional(id) {
+    const profissional = await prisma.profissionalSaude.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        consultas: true,
+        email: true,
+        especialidade: true,
+        id: true,
+        nome: true,
+        telefone: true,
+      },
+    });
+    return profissional;
+  }
   async AtualizarProfissional(id, data) {
     const profissional = await prisma.profissionalSaude.update({
       where: {

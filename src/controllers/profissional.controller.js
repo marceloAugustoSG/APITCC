@@ -1,5 +1,5 @@
 import Profissional from "../models/profissional.model.js";
-import { schemaProfissional } from "../validations/profissionalSaude.js";
+import { schemaProfissional } from "../validations/profissionalSaude.validation.js";
 
 export const create = async (req, res) => {
   try {
@@ -30,12 +30,9 @@ export const create = async (req, res) => {
 
 export const get = async (req, res) => {
   try {
-    const profisionais = await Profissional.ListarTodosProfissionais();
-    if (profisionais.length === 0) {
-      res
-        .status(200)
-        .json({ message: "Nenhuma profissional cadastrado no sistema" });
-    } else res.status(200).json(profisionais);
+    const profissionais = await Profissional.ListarTodosProfissionais();
+
+    res.status(200).json({ profissionais });
   } catch (e) {
     res.status(400).json(e);
   }
@@ -57,14 +54,32 @@ export const getId = async (req, res) => {
 };
 
 export const update = async (req, res) => {
+  const id = req.params.id;
+  const data = req.body;
+  console.log(data);
+
   try {
-    schemaProfissional.parse(req.body);
-    const profissional = await Profissional.AtualizarProfissional(
-      Number(req.params.id),
-      req.body
+    schemaProfissional.parse(data);
+    const profissionaIsExist = await Profissional.compareProfissional(
+      Number(id)
     );
-    res.status(200).json(profissional);
+    console.log("teste: ");
+    console.log(profissionaIsExist);
+    console.log("---------------------");
+    if (!profissionaIsExist) {
+      res.status(404).json({ message: "Esse profissional não existe" });
+      return;
+    }
+    // Comparar os dados recebidos com os dados existentes
+    if (JSON.stringify(data) === JSON.stringify(profissionaIsExist)) {
+      res.status(304).json({ message: "Não houve alterações" });
+      return;
+    }
+    // Atualizar os dados se houver alterações
+    await Profissional.AtualizarProfissional(Number(id), data);
+    res.status(200).json({ message: "Profissional atualizado" });
   } catch (e) {
+    console.log(`${e}`);
     res.status(400).json(e);
   }
 };
