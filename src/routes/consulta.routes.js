@@ -6,6 +6,7 @@ import {
   excluir,
   excluirTodasAsConsultas,
   consultasPaciente,
+  excluirTodasAsConsultasProfissional
 } from "../controllers/consulta.controller.js";
 import { checkPac, checkAdm, checkPsi } from "../services/auth/auth.js";
 // import {
@@ -31,6 +32,9 @@ const consultaRoutes = (app) => {
 
   // Excluir uma consulta específica
   app.delete("/consulta/:id", checkAdm, excluir);
+
+  //Excluir todas as consultas de um profissional
+  app.delete("/consultas/profissional/:id", checkAdm, excluirTodasAsConsultasProfissional);
 
   // Excluir todas as consultas
   app.delete("/consultas", excluirTodasAsConsultas);

@@ -120,6 +120,20 @@ class Consulta {
     return;
   }
 
+
+  async ExcluirConsultasProfissional(id) {
+
+    await prisma.consulta.deleteMany({
+      where: {
+        profissionalId: id
+      }
+
+    })
+    return;
+
+
+  }
+
   async deleteAll() {
     await prisma.consulta.deleteMany();
     await prisma.$queryRaw('ALTER SEQUENCE "Consultas_id_seq" RESTART WITH 1');

@@ -72,9 +72,7 @@ export const update = async (req, res) => {
 
 export const excluir = async (req, res) => {
   try {
-    const consultaIsExist = await Consulta.BuscarConsultaId(
-      Number(req.params.id)
-    );
+    const consultaIsExist = await Consulta.BuscarConsultaId(Number(req.params.id));
     if (!consultaIsExist) {
       res.status(404).json({ message: "Essa consulta não existe" });
     } else {
@@ -94,6 +92,17 @@ export const excluirTodasAsConsultas = async (req, res) => {
     res.status(400).json(e).json({ error: "erro interno" });
   }
 };
+
+export const excluirTodasAsConsultasProfissional = async (req, res) => {
+  try {
+    await Consulta.ExcluirConsultasProfissional(Number(req.params.id));
+    res.status(200).json({ message: "Todas as consultas foram excluidas" });
+  } catch (e) {
+    res.status(400).json(e).json({ error: "erro interno" });
+  }
+};
+
+
 
 export const consultasPaciente = async (req, res) => {
   const idPaciente = Number(req.params.id);
