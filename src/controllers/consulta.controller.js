@@ -114,3 +114,14 @@ export const consultasPaciente = async (req, res) => {
     res.status(400).json({ message: `Erro ${error}` });
   }
 };
+export const consultasPorProfissional = async (req, res) => {
+  const idProfissional = Number(req.params.idProfissional);
+  console.log(idProfissional);
+  try {
+    const consultas = await Consulta.listarConsultasPorProfissional(idProfissional);
+    console.log(consultas)
+    res.status(200).json({ consultas });
+  } catch (error) {
+    res.status(400).json({ message: `Erro ${error}` });
+  }
+};

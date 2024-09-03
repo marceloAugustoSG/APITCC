@@ -6,7 +6,8 @@ import {
   excluir,
   excluirTodasAsConsultas,
   consultasPaciente,
-  excluirTodasAsConsultasProfissional
+  excluirTodasAsConsultasProfissional,
+  consultasPorProfissional
 } from "../controllers/consulta.controller.js";
 import { checkPac, checkAdm, checkPsi } from "../services/auth/auth.js";
 // import {
@@ -26,6 +27,9 @@ const consultaRoutes = (app) => {
 
   // Obter detalhes de uma consulta específica
   app.get("/consulta/:id", checkAdm, getId);
+
+  // Obter detalhes de consultas de um profissional
+  app.get("/consultas-profissional/:idProfissional", checkAdm, consultasPorProfissional);
 
   // Atualizar uma consulta
   app.put("/consulta/:id", checkAdm, update);

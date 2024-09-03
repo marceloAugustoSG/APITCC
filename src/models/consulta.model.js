@@ -52,6 +52,38 @@ class Consulta {
     return consultas;
   }
 
+  //Função que retorna todas as consultas de um profissional
+
+  async listarConsultasPorProfissional(profissionalId) {
+    const consultas = await prisma.consulta.findMany({
+      where: {
+        profissionalId: profissionalId,
+      },
+      select: {
+        data: true,
+        data_solicitacao: true,
+        status: true,
+        Paciente: {
+          select: {
+            nome: true,
+          },
+        },
+        Profissional: {
+          select: {
+            nome: true,
+          },
+        },
+      },
+    });
+    return consultas;
+  }
+
+
+
+
+
+
+
   async compareConsulta(id) {
     const consulta = await prisma.consulta.findUnique({
       where: {
