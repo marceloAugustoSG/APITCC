@@ -14,6 +14,87 @@ export const create = async (req, res) => {
     res.status(400).json({ message: "Erro ao criar uma consulta", e });
   }
 };
+
+
+
+
+export const agendarConsulta = async (req, res) => {
+  try {
+    const { id, profissionalId, dataConsulta } = req.body;
+
+
+    // Verifique se todos os dados necessários estão presentes
+    if (!id || !profissionalId || !dataConsulta) {
+      return res.status(400).json({ message: "Dados insuficientes para agendar a consulta" });
+    }
+
+   
+
+    // Busca a consulta pelo ID
+    const consultaExistente = await Consulta.BuscarConsultaId(id);
+    if (!consultaExistente) {
+      return res.status(404).json({ message: "Consulta não encontrada" });
+    }
+
+    // Atualiza o status para 'Confirmada' e a data e profissional
+    const consultaAgendada = await Consulta.AgendarConsulta(id, dataConsulta, profissionalId)
+
+    return res.status(200).json({ message: "Consulta agendada com sucesso", consultaAgendada });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ message: "Erro ao agendar a consulta", error: e.message });
+  }
+};
+
+
+
+
+
+
+// export const agendarConsulta = async (req, res) => {
+//   try {
+//     const { id, profissionalId, dataConsulta } = req.body;
+
+//     // Verifique se todos os dados necessários estão presentes
+//     if (!id || !profissionalId || !dataConsulta) {
+//       return res.status(400).json({ message: "Dados insuficientes para agendar a consulta" });
+//     }
+
+//     // Busca a consulta pelo ID
+//     const consultaExistente = await Consulta.BuscarConsultaId(id);
+//     if (!consultaExistente) {
+//       return res.status(404).json({ message: "Consulta não encontrada" });
+//     }
+
+//     // Atualiza o status para 'Confirmada' e a data e profissional
+//     const consultaAtualizada = await Consulta.AtualizarConsulta(id, {
+//       status: "Confirmada",
+//       data: new Date(dataConsulta),
+//       profissionalId: profissionalId
+//     });
+
+//     return res.status(200).json({ message: "Consulta agendada com sucesso", consultaAtualizada });
+//   } catch (e) {
+//     console.log(e);
+//     return res.status(500).json({ message: "Erro ao agendar a consulta", error: e.message });
+//   }
+// };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const getId = async (req, res) => {
   try {
     const consulta = await Consulta.BuscarConsultaId(Number(req.params.id));
@@ -31,14 +112,7 @@ export const get = async (req, res) => {
   try {
     const consultas = await Consulta.ListarTodasConsultas();
     res.status(200).json({ consultas });
-    // if (consultas.length === 0) {
-    //   res.status(200).json({
-    //     message: "Nenhuma consulta foi feita no sistema",
-    //     totalConsultas: consultas.length,
-    //   });
-    // } else {
-    //   res.status(200).json(consultas);
-    // }
+
   } catch (e) {
     res.status(400).json(e);
   }
@@ -69,6 +143,9 @@ export const update = async (req, res) => {
     res.status(400).json(e);
   }
 };
+
+
+
 
 export const excluir = async (req, res) => {
   try {

@@ -8,11 +8,12 @@ datasource db {
 }
 
 model Usuario {
-  id       Int       @id @default(autoincrement())
-  email    String    @unique
-  password String
-  regra    String
-  paciente Paciente?
+  id                Int                @id @default(autoincrement())
+  email             String             @unique
+  password          String
+  regra             String
+  paciente          Paciente?
+  ProfissionalSaude ProfissionalSaude?
 
   @@map("usuarios")
 }
@@ -24,6 +25,7 @@ model Paciente {
   matricula      String
   dataNascimento DateTime
   telefone       String?
+  curso          String?
   usuarioId      Int           @unique
   Usuario        Usuario       @relation(fields: [usuarioId], references: [id])
   consultas      Consulta[]
@@ -44,17 +46,21 @@ model Consulta {
   Profissional     ProfissionalSaude? @relation(fields: [profissionalId], references: [id])
   data_solicitacao DateTime           @default(now())
   respostas        String?
+  Compromisso      Compromisso[]
 
   @@map("consultas")
 }
 
 model ProfissionalSaude {
-  id            Int        @id @default(autoincrement())
+  id            Int           @id @default(autoincrement())
   nome          String
   especialidade String
   consultas     Consulta[]
-  email         String     @unique
+  email         String        @unique
   telefone      String?
+  compromissos  Compromisso[] // Relação com Disponibilidade
+  usuarioId     Int           @unique
+  Usuario       Usuario       @relation(fields: [usuarioId], references: [id])
 
   @@map("profissionais")
 }
@@ -66,4 +72,18 @@ model Notificacao {
   pacienteId Int?
 
   @@map("notificacoes")
+}
+
+model Compromisso {
+  id                Int               @id @default(autoincrement())
+  tituloCompromisso String // Título do compromisso
+  dataCompromisso   DateTime // Data do compromisso
+  horaInicio        DateTime // Horário de início do compromisso
+  horaFim           DateTime // Horário de fim do compromisso
+  profissionalId    Int // Referência ao profissional
+  Profissional      ProfissionalSaude @relation(fields: [profissionalId], references: [id])
+  consulta          Consulta?         @relation(fields: [consultaId], references: [id])
+  consultaId        Int?
+
+  @@map("compromissos")
 }

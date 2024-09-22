@@ -31,7 +31,8 @@ class Usuario {
             tipo: data.paciente.tipo,
             matricula: data.paciente.matricula,
             dataNascimento: data.paciente.dataNascimento,
-            telefone: data.paciente.telefone
+            telefone: data.paciente.telefone,
+            curso: data.paciente.curso
           }
         }
       },
@@ -44,13 +45,44 @@ class Usuario {
     });
     return usuario;
   };
+
+
+
+
+  async CriarUsuarioProfissional(data) {
+    const usuario = await prisma.usuario.create({
+      data: {
+        email: data.email,
+        password: data.password,
+        regra: data.regra,
+        ProfissionalSaude: {
+          create: {
+            nome: data.ProfissionalSaude.nome,
+            especialidade: data.ProfissionalSaude.especialidade,
+            email: data.email,
+            telefone: data.ProfissionalSaude.telefone,
+          }
+        }
+      },
+      select: {
+        email: true,
+        password: false,
+        regra: true,
+        ProfissionalSaude: true
+      }
+    });
+    return usuario;
+  };
+
+
   async ListarTodosUsuarios() {
     const usuarios = await prisma.usuario.findMany({
       select: {
         id: true,
         email: true,
         regra: true,
-        paciente: true
+        paciente: true,
+        ProfissionalSaude: true
       }
     })
     return usuarios;

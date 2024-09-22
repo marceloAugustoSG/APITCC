@@ -41,7 +41,7 @@ export function checkAdm(req, res, next) {
   }
 }
 //middleware de checagem se o usuario é um psicologo
-export function checkPsi(req, res, next) {
+export function checkPs(req, res, next) {
   const authHeader = req.headers["authorization"];
 
   const token = authHeader && authHeader.split(" ")[1];
@@ -57,7 +57,7 @@ export function checkPsi(req, res, next) {
 
     const regraUsuario = decoded.regra;
 
-    if (regraUsuario === "psicologo") {
+    if (regraUsuario === "psicologo" ||regraUsuario === "medico" ) {
       next();
     } else {
       return res.status(403).json({ message: "acesso não autorizado!" });

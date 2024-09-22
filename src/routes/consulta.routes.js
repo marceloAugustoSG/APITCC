@@ -7,17 +7,18 @@ import {
   excluirTodasAsConsultas,
   consultasPaciente,
   excluirTodasAsConsultasProfissional,
-  consultasPorProfissional
+  consultasPorProfissional,
+  agendarConsulta
 } from "../controllers/consulta.controller.js";
-import { checkPac, checkAdm, checkPsi } from "../services/auth/auth.js";
-// import {
-//   validate,
-//   rulesValidationConsulta,
-// } from "../validations/consultaValidation.js";
+import { checkPac, checkAdm, checkPs } from "../services/auth/auth.js";
 
 const consultaRoutes = (app) => {
   // Criar uma nova consulta
   app.post("/consulta", create);
+
+
+  // Agendar consulta
+  app.post("/consulta/agendar", agendarConsulta);
 
   // Listar todas as consultas
   app.get("/consultas", checkAdm, get);
@@ -29,7 +30,8 @@ const consultaRoutes = (app) => {
   app.get("/consulta/:id", checkAdm, getId);
 
   // Obter detalhes de consultas de um profissional
-  app.get("/consultas-profissional/:idProfissional", checkAdm, consultasPorProfissional);
+  // app.get("/consultas-profissional/:idProfissional", checkAdm, consultasPorProfissional);
+  app.get("/consultas-profissional/:idProfissional",consultasPorProfissional);
 
   // Atualizar uma consulta
   app.put("/consulta/:id", checkAdm, update);
